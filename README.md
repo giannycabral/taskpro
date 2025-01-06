@@ -43,6 +43,7 @@ A aplicação apresenta uma interface limpa com:
 - Container centralizado com sombra suave
 - Campos de entrada estilizados
 - Lista de tarefas com efeitos de hover
+  ![lista de tarefas](https://github.com/user-attachments/assets/a3d8f0a1-3734-4b69-bb14-75d0d53d5909)
 
 ---
 ⌨️ com ❤️ por [REGIANE CABRAL](https://github.com/giannycabral)
