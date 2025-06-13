@@ -1,0 +1,322 @@
+/* TaskPro - Estilo Profissional Moderno */
+
+/* Importação de fontes */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
+
+/* Paleta de cores profissional */
+:root {
+    /* Cores primárias e secundárias */
+    --primary-color: #7B68EE; /* Lilás médio-escuro */
+    --primary-light: #9370DB; /* Lilás médio */
+    --primary-lighter: #B19CD9; /* Lilás claro */
+    --primary-dark: #5D4AB7; /* Lilás escuro */
+    --primary-darkest: #2D1B4E; /* Roxo muito escuro */
+    
+    --secondary-color: #FF69B4; /* Rosa quente */
+    --secondary-light: #FFA6CF; /* Rosa claro */
+    --secondary-dark: #FF1493; /* Rosa profundo */
+    
+    /* Cores de background e cartões */
+    --bg-color: #FFFFFF; /* Fundo branco */
+    --bg-alt: #F8F9FD; /* Fundo alternativo */
+    --card-bg: #FFFFFF; /* Fundo do cartão - branco */
+    
+    /* Cores de texto */
+    --text-dark: #333333; /* Texto principal escuro */
+    --text-medium: #666666; /* Texto secundário */
+    --text-light: #999999; /* Texto terciário */
+    
+    /* Sombras e gradientes */
+    --card-shadow: 0 10px 25px rgba(123, 104, 238, 0.15); /* Sombra suave lilás */
+    --gradient: linear-gradient(135deg, #7B68EE, #FF69B4); /* Gradient lilás para rosa */
+    --gradient-light: linear-gradient(135deg, #9370DB, #FFA6CF); /* Gradient lilás claro para rosa claro */
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra padrão */
+    --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.15); /* Sombra ao passar mouse */
+    
+    /* Bordas */
+    --border-radius: 12px; /* Bordas arredondadas */
+    --button-radius: 8px; /* Bordas dos botões */
+    --input-radius: 8px; /* Bordas dos inputs */
+    --border-color: #E6E6FA; /* Borda lilás claro */
+    --input-border: #D8D8FF; /* Borda para inputs */
+    
+    /* Cores de status */
+    --success-color: #4CAF50; /* Verde */
+    --warning-color: #FF9800; /* Laranja */
+    --error-color: #F44336; /* Vermelho */
+    
+    /* Transições */
+    --transition: all 0.3s ease; /* Transição suave */
+}
+
+/* Reset básico para elementos da página */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Corpo da página */
+body.auth-page {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background-color: var(--bg-alt);
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    background-image: linear-gradient(135deg, rgba(123, 104, 238, 0.05) 0%, rgba(255, 105, 180, 0.05) 100%);
+}
+
+/* Container principal */
+.auth-container {
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    text-align: center;
+    position: relative;
+    overflow: visible;
+    border: 1px solid var(--border-color);
+}
+
+/* Decoração do topo */
+.auth-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+/* Logo da aplicação */
+.auth-logo {
+    font-size: 32px;
+    margin: 0 auto 25px;
+    width: 80px;
+    height: 80px;
+    background: var(--gradient);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: var(--shadow);
+}
+
+/* Título da página */
+.auth-container h1 {
+    color: var(--text-dark);
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-size: 26px;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+}
+
+/* Subtítulo / tagline */
+.auth-tagline {
+    color: var(--text-medium);
+    margin-bottom: 30px;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+/* Formulário */
+.auth-form {
+    text-align: left;
+    margin-top: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+/* Labels */
+.auth-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+/* Campos de entrada */
+.auth-form input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: var(--input-radius);
+    border: 1px solid var(--input-border);
+    background-color: #F9FAFF;
+    font-size: 15px;
+    transition: var(--transition);
+    color: var(--text-dark);
+}
+
+.auth-form input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(123, 104, 238, 0.15);
+}
+
+.auth-form input::placeholder {
+    color: var(--text-light);
+}
+
+/* Botão principal */
+.auth-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: var(--button-radius);
+    background: var(--gradient);
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 10px;
+    box-shadow: var(--shadow);
+}
+
+.auth-btn:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+.auth-btn:active {
+    transform: translateY(1px);
+}
+
+/* Links adicionais */
+.auth-links {
+    margin-top: 25px;
+    color: var(--text-medium);
+}
+
+.auth-links p {
+    font-size: 14px;
+}
+
+.auth-links a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.auth-links a:hover {
+    color: var(--secondary-color);
+}
+
+/* Rodapé */
+.auth-footer {
+    margin-top: 35px;
+    color: var(--text-light);
+    font-size: 13px;
+}
+
+/* Mensagens flash */
+.flash-messages {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.flash {
+    padding: 14px 16px;
+    margin-bottom: 15px;
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    position: relative;
+    border-left: 4px solid transparent;
+    text-align: left;
+}
+
+.flash.sucesso, .flash.success {
+    background-color: rgba(76, 175, 80, 0.1);
+    border-color: var(--success-color);
+    color: var(--success-color);
+}
+
+.flash.erro, .flash.error, .flash.danger {
+    background-color: rgba(244, 67, 54, 0.1);
+    border-color: var(--error-color);
+    color: var(--error-color);
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 30px 20px;
+    }
+    
+    .auth-logo {
+        width: 70px;
+        height: 70px;
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+    
+    .auth-container h1 {
+        font-size: 22px;
+    }
+    
+    .auth-tagline {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 16px;
+    }
+    
+    .auth-form input,
+    .auth-btn {
+        padding: 12px;
+    }
+}
+
+/* Telas muito pequenas */
+@media (max-width: 360px) {
+    .auth-container {
+        padding: 25px 15px;
+    }
+    
+    .auth-form input, .auth-btn {
+        padding: 10px 12px;
+    }
+    
+    .auth-logo {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+    }
+}
+
+/* Tablets e telas maiores */
+@media (min-width: 768px) {
+    .auth-container {
+        padding: 45px;
+        box-shadow: 0 15px 30px rgba(123, 104, 238, 0.2);
+    }
+    
+    .auth-logo {
+        width: 90px;
+        height: 90px;
+        font-size: 36px;
+    }
+    
+    .auth-container h1 {
+        font-size: 28px;
+    }
+    
+    .auth-btn {
+        padding: 16px;
+    }
+}

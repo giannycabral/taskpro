@@ -3,50 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Login - TaskPro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/professional.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/professional_auth.css') }}">
-    <style>
-        /* Garante que não há animações ou movimentos na página de login */
-        *, *::before, *::after {
-            animation: none !important;
-            transition: none !important;
-            transform: none !important;
-        }
-        .auth-container::after {
-            box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.3);
-            border: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        /* Corrige especificamente os elementos flash */
-        .flash, .flash::before, .flash::after {
-            animation: none !important;
-            transition: none !important;
-            transform: none !important;
-            border-radius: 10px;
-            position: relative;
-        }
-        .flash.erro::before, .flash.error::before, .flash.danger::before {
-            content: "" !important; /* Removido o ícone */
-            background: none !important;
-            width: 0 !important;
-            height: 0 !important;
-        }
-        .flash.erro, .flash.error, .flash.danger {
-            padding: 16px !important;
-            text-align: center !important;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_modern.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_icons.css') }}">
 </head>
 
-<body>
+<body class="auth-page">
     <div class="container auth-container">
         <div class="auth-logo">📝</div>
         
@@ -85,6 +48,14 @@
             TaskPro - Gerencie suas tarefas com eficiência
         </div>
     </div>
+    <script>
+        // Este script é mantido simples para garantir o funcionamento adequado
+        document.addEventListener('DOMContentLoaded', function() {
+            // Foco automático no campo de email
+            const emailInput = document.getElementById('email');
+            if (emailInput) emailInput.focus();
+        });
+    </script>
 </body>
 
 </html>

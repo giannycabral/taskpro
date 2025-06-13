@@ -1,4 +1,6 @@
 /* Estilo Pixel Art com Cores Lilás e Rosa */
+/* Estilos base - Design pixel art com visual retrô */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 /* Variáveis de cor - Esquema pixel art */
 :root {
@@ -34,9 +36,6 @@
 *, *::before, *::after {
     box-sizing: border-box;
 }
-
-/* Estilos base - Design pixel art com visual retrô */
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 body {
     font-family: 'Press Start 2P', cursive;
