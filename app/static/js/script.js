@@ -1,26 +1,32 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Verificar se estamos em uma página de autenticação para evitar animações
+    const isAuthPage = document.querySelector('.auth-container') !== null;
+    
     // Adiciona classes para efeitos de entrada nos elementos principais
-    const container = document.querySelector('.container');
-    const header = document.querySelector('.header');
-    const sections = document.querySelectorAll('.category-section');
-    
-    if (container) {
-        container.classList.add('fade-in');
-    }
-    
-    if (header) {
-        setTimeout(() => {
-            header.classList.add('slide-in');
-        }, 100);
-    }
-    
-    // Adiciona animação sequencial para as seções de categorias
-    if (sections.length > 0) {
-        sections.forEach((section, index) => {
+    // apenas se não estivermos em uma página de autenticação
+    if (!isAuthPage) {
+        const container = document.querySelector('.container');
+        const header = document.querySelector('.header');
+        const sections = document.querySelectorAll('.category-section');
+        
+        if (container) {
+            container.classList.add('fade-in');
+        }
+        
+        if (header) {
             setTimeout(() => {
-                section.classList.add('fade-in');
-            }, 200 + (index * 100));
-        });
+                header.classList.add('slide-in');
+            }, 100);
+        }
+        
+        // Adiciona animação sequencial para as seções de categorias
+        if (sections.length > 0) {
+            sections.forEach((section, index) => {
+                setTimeout(() => {
+                    section.classList.add('fade-in');
+                }, 200 + (index * 100));
+            });
+        }
     }
 
     // Manipulador para marcar tarefas como concluídas com efeito visual
@@ -138,8 +144,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Detecta flash messages e adiciona animação de saída automática
+    // Desabilita essa animação para páginas de autenticação
     const flashMessages = document.querySelectorAll('.flash');
-    if (flashMessages.length > 0) {
+    if (flashMessages.length > 0 && !isAuthPage) {
         flashMessages.forEach(message => {
             setTimeout(() => {
                 message.style.opacity = '0';

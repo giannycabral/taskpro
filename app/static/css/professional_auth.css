@@ -1,163 +1,130 @@
-/* Estilo Profissional para páginas de Autenticação */
+/* Estilo Pixel Art para páginas de Autenticação */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 .auth-container {
+    width: 100%;
     max-width: 450px;
-    padding: 45px;
+    padding: 40px;
     margin: 0 auto;
-    background-color: rgba(255, 255, 255, 0.75);
-    box-shadow: 
-        0 15px 50px rgba(99, 102, 241, 0.15),
-        0 5px 15px rgba(0, 0, 0, 0.05),
-        0 0 0 1px rgba(255, 255, 255, 0.8) inset;
-    border-radius: 20px;
+    background-color: var(--card-bg);
+    box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.5);
+    border-radius: 0;
     text-align: center;
     position: relative;
     overflow: hidden;
-    border: none;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    animation: fadeIn 0.6s ease-out forwards;
-    transition: all 0.3s ease;
+    border: 4px solid var(--primary-color);
+    box-sizing: border-box;
+    font-family: 'Press Start 2P', cursive;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+/* Estilo pixel art sem animações */
 
 .auth-container::after {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 16px;
-    box-shadow: inset 0 0 0 2px rgba(99, 102, 241, 0.3);
-    opacity: 0.6;
+    top: -4px;
+    left: -4px;
+    width: calc(100% + 8px);
+    height: calc(100% + 8px);
+    border: 4px solid var(--secondary-color);
+    opacity: 1;
     pointer-events: none;
-    z-index: 1;
+    z-index: -1;
+    animation: none;
+    transition: none;
+    transform: none;
 }
 
 .auth-container::before {
     content: "";
     position: absolute;
-    width: 200%;
-    height: 200%;
-    top: -50%;
-    left: -50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
-    opacity: 0.08;
-    animation: rotate 20s linear infinite;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-image: 
+        linear-gradient(45deg, rgba(255, 105, 180, 0.1) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(147, 112, 219, 0.1) 25%, transparent 25%);
+    background-size: 8px 8px;
+    opacity: 0.2;
     pointer-events: none;
     z-index: 0;
-}
-
-@keyframes rotate {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+    animation: none;
+    transition: none;
+    transform: none;
 }
 
 .auth-logo {
     font-size: 48px;
-    margin: 0 auto 15px;
+    margin: 0 auto 25px;
     width: 90px;
     height: 90px;
-    background: var(--gradient);
-    border-radius: 50%;
+    background: var(--primary-color);
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    margin-bottom: 25px;
-    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
     position: relative;
-    animation: gentle-float 3s ease-in-out infinite alternate, fadeInUp 0.6s 0.2s forwards;
     z-index: 1;
-    opacity: 0;
+    border: 4px solid var(--primary-dark);
 }
 
 .auth-logo::before {
     content: '';
     position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: var(--gradient);
-    opacity: 0.5;
-    filter: blur(10px);
+    width: calc(100% + 8px);
+    height: calc(100% + 8px);
+    top: -4px;
+    left: -4px;
+    border: 2px solid var(--secondary-color);
+    opacity: 0.8;
     z-index: -1;
-    animation: pulse-glow 2s infinite alternate;
 }
 
 .auth-logo::after {
     content: '';
     position: absolute;
-    width: 50%;
-    height: 50%;
+    width: 60%;
+    height: 20%;
     top: 15%;
-    left: 15%;
+    left: 20%;
     background: rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    filter: blur(5px);
 }
 
-@keyframes gentle-float {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-5px); }
-}
-
-@keyframes pulse-glow {
-    0% { opacity: 0.3; transform: scale(1); }
-    100% { opacity: 0.6; transform: scale(1.05); }
-}
+/* Estilo pixel art para textos */
 
 .auth-container h1 {
-    color: var(--primary-color);
-    font-size: 28px;
-    margin: 0 0 10px 0;
+    color: var(--secondary-color);
+    font-size: 18px;
+    margin: 0 0 20px 0;
     padding: 0;
     font-weight: 700;
-    background: var(--gradient);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: -0.5px;
+    letter-spacing: 1px;
     position: relative;
     z-index: 5;
     display: inline-block;
-    animation: fadeInUp 0.6s 0.4s forwards;
-    opacity: 0;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+    text-transform: uppercase;
 }
 
 .auth-tagline {
     color: var(--text-light);
     margin-bottom: 35px;
-    font-size: 17px;
+    font-size: 10px;
     position: relative;
     display: inline-block;
     z-index: 1;
-    animation: fadeInUp 0.6s 0.6s forwards;
-    opacity: 0;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
 }
 
 .auth-tagline::after {
     content: "";
     position: absolute;
     width: 60px;
-    height: 3px;
-    background: var(--gradient);
-    border-radius: 3px;
+    height: 4px;
+    background: var(--secondary-color);
     bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
@@ -167,46 +134,57 @@
     position: relative;
     z-index: 1;
     text-align: left;
-    animation: fadeInUp 0.6s 0.8s forwards;
-    opacity: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .auth-form .form-group {
     margin-bottom: 25px;
     position: relative;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .auth-form label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     font-weight: 600;
-    font-size: 15px;
-    color: var(--text-color);
-    transition: var(--transition);
+    font-size: 10px;
+    color: var(--secondary-color);
+    transition: none;
     transform-origin: left;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
 }
 
 .auth-form input {
     width: 100%;
     padding: 14px 16px;
-    border-radius: 10px;
-    border: 1px solid var(--border-color);
-    background-color: rgba(255, 255, 255, 0.9);
-    font-size: 15px;
-    transition: all 0.3s ease;
+    border-radius: 0;
+    border: 4px solid var(--primary-dark);
+    background-color: #E6E6FA;
+    font-size: 12px;
+    transition: none;
+    box-sizing: border-box;
+    max-width: 100%;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+    color: var(--bg-color);
+    font-family: 'Press Start 2P', cursive;
 }
 
 .auth-form input:focus {
     outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-    transform: translateY(-2px);
+    border-color: var(--secondary-color);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+    transform: none;
 }
 
 .auth-form input:hover {
-    border-color: var(--primary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+    border-color: var(--secondary-color);
+    transform: none;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
 }
 
 /* Efeito de label flutuante */
@@ -219,49 +197,55 @@
 .auth-btn {
     width: 100%;
     padding: 14px;
-    border-radius: 10px;
-    background: var(--gradient);
-    border: none;
+    border-radius: 0;
+    background: var(--primary-color);
+    border: 4px solid var(--primary-dark);
     color: white;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 12px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: none;
     position: relative;
     overflow: hidden;
     margin-top: 20px;
-    box-shadow: 0 6px 15px rgba(99, 102, 241, 0.25);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+    max-width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Press Start 2P', cursive;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
 }
 
 .auth-btn:hover {
-    background: var(--gradient-hover);
-    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
-    transform: translateY(-2px);
+    background: var(--secondary-color);
+    border-color: var(--secondary-dark);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+    transform: translate(2px, 2px);
 }
 
 .auth-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.25);
+    transform: translate(4px, 4px);
+    box-shadow: none;
 }
 
 .auth-links {
     margin-top: 30px;
     position: relative;
     z-index: 1;
-    animation: fadeInUp 0.6s 1s forwards;
-    opacity: 0;
 }
 
 .auth-links p {
     color: var(--text-light);
-    font-size: 15px;
+    font-size: 10px;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
 }
 
 .auth-links a {
-    color: var(--primary-color);
+    color: var(--secondary-color);
     text-decoration: none;
     font-weight: 600;
-    transition: var(--transition);
+    transition: none;
     position: relative;
     display: inline-block;
 }
@@ -274,7 +258,7 @@
     bottom: -2px;
     left: 0;
     background: var(--gradient);
-    transition: width 0.3s ease;
+    transition: none;
     border-radius: 2px;
 }
 
@@ -293,8 +277,6 @@
     opacity: 0.8;
     position: relative;
     z-index: 1;
-    animation: fadeInUp 0.6s 1.2s forwards;
-    opacity: 0;
 }
 
 /* Mensagens flash em páginas de autenticação */
@@ -340,7 +322,16 @@
 .auth-container .flash.erro::before,
 .auth-container .flash.error::before,
 .auth-container .flash.danger::before {
-    background-color: #dc2626;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0; /* Removida altura para eliminar o traço */
+    width: 0; /* Removida largura para eliminar o traço */
+    background-color: transparent; /* Removida cor de fundo */
+    animation: none;
+    transition: none;
+    transform: none;
 }
 
 .auth-container .flash.sucesso,
@@ -351,7 +342,16 @@
 
 .auth-container .flash.sucesso::before,
 .auth-container .flash.success::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 5px;
     background-color: #059669;
+    animation: none;
+    transition: none;
+    transform: none;
 }
 
 /* Estilo específico para a mensagem "Por favor, faça login para acessar esta página" */
@@ -361,20 +361,18 @@
     border: 1px solid rgba(239, 68, 68, 0.2);
     color: #dc2626;
     font-weight: 600;
-    display: flex;
-    align-items: center;
-    padding: 16px 20px;
+    text-align: center; /* Centralizar texto */
+    padding: 16px;
     position: relative;
 }
 
 .auth-container .flash.erro::before {
-    content: "⚠️";
-    margin-right: 10px;
-    font-size: 16px;
+    content: ""; /* Removido o ícone de aviso */
     position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
+    width: 0; /* Removido o traço */
+    height: 0;
+    animation: none;
+    transition: none;
 }
 
 /* Ajuste nas margens das mensagens flash para melhor espaçamento */
@@ -389,13 +387,57 @@
     z-index: 2;
 }
 
-.auth-container::after {
-    z-index: 1;
-}
+/* Removido para evitar duplicidade com a definição anterior */
 
 .auth-container {
-    border: var(--glass-border);
+    border: 1px solid rgba(255, 255, 255, 0.7);
     position: relative;
+    animation: none;
+    transition: none;
+    transform: none;
+}
+
+/* Garantir que os formulários de autenticação fiquem contidos */
+.auth-form {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.auth-form .form-group {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Corrige o problema de elementos saindo dos containers */
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 25px 20px;
+        max-width: 90%;
+        width: 90%;
+        margin: 10px auto;
+    }
+    
+    .auth-form input,
+    .auth-btn {
+        font-size: 14px;
+        padding: 12px;
+    }
+    
+    .auth-logo {
+        width: 70px;
+        height: 70px;
+        font-size: 36px;
+    }
+    
+    .auth-container h1 {
+        font-size: 24px;
+    }
+    
+    .auth-tagline {
+        font-size: 15px;
+    }
 }
 
 /* Melhorando o efeito de fundo */
@@ -404,4 +446,63 @@ body {
     overflow-x: hidden;
     min-height: 100vh;
     background: linear-gradient(135deg, #f8f9ff 0%, #eef1ff 100%);
+    animation: none;
+    transition: none;
+    background-attachment: fixed;
+}
+
+/* Garante que o body::before e body::after não contenham animações nas páginas de autenticação */
+body::before,
+body::after {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    background-attachment: fixed !important;
+}
+
+/* Garante que todos os elementos dentro de .auth-container não contenham animações */
+.auth-container * {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+}
+
+/* Garantindo que todos os pseudo-elementos de flash não tenham animações */
+.auth-container .flash::before,
+.auth-container .flash::after {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+}
+
+/* Adicionando posição absoluta para garantir que os pseudo-elementos não causem movimento */
+.auth-container .flash {
+    position: relative;
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    overflow: hidden;
+}
+
+/* Garantindo que não há efeitos de hover em nenhum elemento dentro do flash */
+.auth-container .flash * {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+}
+
+/* Garantindo que não haja ícones ou linhas nas mensagens flash */
+.auth-container .flash {
+    padding: 16px !important;
+    text-align: center !important;
+    border-left: none !important;
+}
+
+.auth-container .flash::before,
+.auth-container .flash::after {
+    content: "" !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+    border: none !important;
 }
