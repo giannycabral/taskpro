@@ -1,0 +1,108 @@
+/* Estilo Profissional para páginas de Autenticação */
+
+.auth-container {
+    max-width: 450px;
+    padding: 40px;
+    margin: 0 auto;
+    background-color: var(--card-bg);
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.auth-logo {
+    font-size: 48px;
+    margin: 0 auto 10px;
+    width: 80px;
+    height: 80px;
+    background: var(--gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.auth-container h1 {
+    color: var(--primary-color);
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.auth-tagline {
+    color: #777;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+.auth-form {
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.auth-links {
+    margin-top: 25px;
+    font-size: 14px;
+    color: #777;
+}
+
+.auth-links a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+
+.auth-footer {
+    margin-top: 30px;
+    font-size: 12px;
+    color: #999;
+}
+
+/* Responsividade */
+@media (max-width: 500px) {
+    .auth-container {
+        padding: 25px;
+        margin: 15px;
+        width: 90%;
+    }
+}
+
+/* Efeito de transição */
+.auth-container {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskPro - Sua lista de tarefas eficiente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/professional.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <span class="logo-icon">📝</span>
+                <div>
+                    <h1>TaskPro</h1>
+                    <p class="tagline">Sua lista de tarefas eficiente!</p>
+                </div>
+            </div>
+            
+            <div class="user-info">
+                <span>Olá, {{ usuario_nome }}!</span>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+            </div>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="section-title">Adicionar nova tarefa</div>
+        <form action="{{ url_for('adicionar_tarefa') }}" method="POST">
+            <div class="form-group">
+                <input type="text" name="tarefa" placeholder="Digite sua tarefa..." required>
+            </div>
+            <div class="form-group">
+                <select name="categoria_id">
+                    <option value="">Sem categoria</option>
+                    {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="date" name="data_vencimento" placeholder="Data de vencimento">
+            </div>
+            <button type="submit" id="addButton">Adicionar Tarefa</button>
+        </form>
+
+        <div class="section-title">Nova categoria</div>
+        <form action="{{ url_for('adicionar_categoria') }}" method="POST">
+            <div class="form-group">
+                <input type="text" name="nome_categoria" placeholder="Nome da categoria" required>
+            </div>
+            <button type="submit" class="secondary">Criar categoria</button>
+        </form>
+
+        <div class="section-title">Filtros e Ordenação</div>
+        <div class="filters">
+            <form method="GET" action="{{ url_for('index') }}">
+                <div class="filter-group">
+                    <span class="filter-label">Status:</span>
+                    <select name="status" class="filter-select" onchange="this.form.submit()">
+                        <option value="todas" {% if filtro_status == 'todas' %}selected{% endif %}>Todas as tarefas</option>
+                        <option value="pendentes" {% if filtro_status == 'pendentes' %}selected{% endif %}>Pendentes</option>
+                        <option value="concluidas" {% if filtro_status == 'concluidas' %}selected{% endif %}>Concluídas</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <span class="filter-label">Ordenar por:</span>
+                    <select name="ordem" class="filter-select" onchange="this.form.submit()">
+                        <option value="criacao" {% if ordem == 'criacao' %}selected{% endif %}>Mais recentes primeiro</option>
+                        <option value="criacao_desc" {% if ordem == 'criacao_desc' %}selected{% endif %}>Mais antigas primeiro</option>
+                        <option value="vencimento" {% if ordem == 'vencimento' %}selected{% endif %}>Vencimento (próximas primeiro)</option>
+                        <option value="vencimento_desc" {% if ordem == 'vencimento_desc' %}selected{% endif %}>Vencimento (mais distantes primeiro)</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <div class="section-title">Minhas Tarefas</div>
+        <fieldset>
+            <legend>Organização de Tarefas</legend>
+            {% for categoria, tarefas_cat in tarefas_por_categoria.items() %}
+                <div class="category-section">
+                    <h3 class="category-title">{{ categoria }}</h3>
+                    <ul>
+                        {% if tarefas_cat %}
+                            {% for tarefa in tarefas_cat %}
+                                <li data-id="{{ tarefa.id }}" class="{% if tarefa.concluida %}checked{% endif %} {{ tarefa.status_vencimento }}">
+                                    <div class="task-content">
+                                        {{ tarefa.conteudo }}
+                                        {% if tarefa.data_vencimento %}
+                                            <span class="task-meta">
+                                                Vence em: {{ tarefa.data_vencimento.strftime('%d/%m/%Y') }}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                    <span class="close">×</span>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li>Nenhuma tarefa nesta categoria</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endfor %}
+            {% if tarefas_sem_categoria %}
+                <div class="category-section">
+                    <h3 class="category-title">Sem categoria</h3>
+                    <ul>
+                        {% for tarefa in tarefas_sem_categoria %}
+                            <li data-id="{{ tarefa.id }}" class="{% if tarefa.concluida %}checked{% endif %} {{ tarefa.status_vencimento }}">
+                                <div class="task-content">
+                                    {{ tarefa.conteudo }}
+                                    {% if tarefa.data_vencimento %}
+                                        <span class="task-meta">
+                                            Vence em: {{ tarefa.data_vencimento.strftime('%d/%m/%Y') }}
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                <span class="close">×</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </fieldset>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>

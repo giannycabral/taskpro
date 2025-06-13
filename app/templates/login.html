@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - TaskPro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/professional.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/professional_auth.css') }}">
+</head>
+
+<body>
+    <div class="container auth-container">
+        <div class="auth-logo">📝</div>
+        
+        <h1>Bem-vindo de volta</h1>
+        <p class="auth-tagline">Sua lista de tarefas eficiente!</p>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('login') }}" method="POST" class="auth-form">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Seu email corporativo" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" name="senha" placeholder="Sua senha" required>
+            </div>
+            
+            <button type="submit" class="auth-btn">Entrar</button>
+        </form>
+        
+        <div class="auth-links">
+            <p>Não tem uma conta? <a href="{{ url_for('registro') }}">Registre-se</a></p>
+        </div>
+        
+        <div class="auth-footer">
+            TaskPro - Gerencie suas tarefas com eficiência
+        </div>
+    </div>
+</body>
+
+</html>
