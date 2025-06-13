@@ -25,6 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Configurar o sistema de notificações
+    setupNotificationSystem();
+    
     // Adiciona animações sutis para melhorar a experiência do usuário
     animateElements();
 });
@@ -153,3 +156,177 @@ document.addEventListener('mouseout', function(e) {
         task.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
     }
 });
+
+// Função para configurar o sistema de notificações
+function setupNotificationSystem() {
+    // Elementos DOM
+    const notificationBell = document.querySelector('.notification-bell');
+    const notificationCount = document.getElementById('notificationCount');
+    const notificationsArea = document.getElementById('notificationsArea');
+    const closeNotifications = document.getElementById('closeNotifications');
+    const notificationList = document.getElementById('notificationList');
+    
+    // Variável para armazenar as notificações
+    let notifications = [];
+    
+    // Verifica tarefas próximas ao vencimento ou vencidas
+    checkDueTasks();
+    
+    // Alterna a visibilidade da área de notificações
+    notificationBell.addEventListener('click', function() {
+        notificationsArea.classList.toggle('show');
+        if (notificationsArea.classList.contains('show')) {
+            // Marca as notificações como lidas
+            notificationBell.classList.remove('has-new');
+        }
+    });
+    
+    // Fecha o painel de notificações
+    closeNotifications.addEventListener('click', function() {
+        notificationsArea.classList.remove('show');
+    });
+    
+    // Clique fora da área de notificações fecha o painel
+    document.addEventListener('click', function(event) {
+        if (!notificationsArea.contains(event.target) && 
+            !notificationBell.contains(event.target) && 
+            notificationsArea.classList.contains('show')) {
+            notificationsArea.classList.remove('show');
+        }
+    });
+    
+    // Função para verificar tarefas próximas ao vencimento ou vencidas
+    function checkDueTasks() {
+        let count = 0;
+        notifications = [];
+        
+        // Procura todas as tarefas com classes de vencimento
+        const proximasTasks = document.querySelectorAll('li.proxima:not(.checked)');
+        const vencidasTasks = document.querySelectorAll('li.vencida:not(.checked)');
+        
+        // Adiciona tarefas próximas às notificações
+        proximasTasks.forEach(task => {
+            const taskContent = task.querySelector('.task-content');
+            const taskMeta = task.querySelector('.task-meta');
+            
+            if (taskContent) {
+                count++;
+                
+                const taskText = taskContent.childNodes[0].textContent.trim();
+                const dueDate = taskMeta ? taskMeta.textContent.replace('Vence em:', '').trim() : 'Em breve';
+                
+                notifications.push({
+                    id: task.dataset.id,
+                    title: 'Tarefa próxima do vencimento',
+                    message: taskText,
+                    date: dueDate,
+                    type: 'proxima',
+                    element: task
+                });
+            }
+        });
+        
+        // Adiciona tarefas vencidas às notificações
+        vencidasTasks.forEach(task => {
+            const taskContent = task.querySelector('.task-content');
+            const taskMeta = task.querySelector('.task-meta');
+            
+            if (taskContent) {
+                count++;
+                
+                const taskText = taskContent.childNodes[0].textContent.trim();
+                const dueDate = taskMeta ? taskMeta.textContent.replace('Vence em:', '').trim() : 'Vencida';
+                
+                notifications.push({
+                    id: task.dataset.id,
+                    title: 'Tarefa vencida!',
+                    message: taskText,
+                    date: dueDate,
+                    type: 'vencida',
+                    element: task
+                });
+            }
+        });
+        
+        // Atualiza a contagem de notificações
+        updateNotificationCount(count);
+        
+        // Renderiza as notificações
+        renderNotifications();
+        
+        // Adiciona classe especial se houver notificações
+        if (count > 0) {
+            notificationBell.classList.add('has-new');
+        }
+    }
+    
+    // Atualiza o contador de notificações
+    function updateNotificationCount(count) {
+        notificationCount.textContent = count > 0 ? count : '';
+    }
+    
+    // Renderiza as notificações na área de notificações
+    function renderNotifications() {
+        // Limpa a lista de notificações
+        notificationList.innerHTML = '';
+        
+        if (notifications.length === 0) {
+            const emptyNotification = document.createElement('div');
+            emptyNotification.className = 'notification-item';
+            emptyNotification.innerHTML = `
+                <div class="notification-content">
+                    <div class="notification-message">Não há notificações no momento.</div>
+                </div>
+            `;
+            notificationList.appendChild(emptyNotification);
+            return;
+        }
+        
+        // Adiciona cada notificação à lista
+        notifications.forEach(notification => {
+            const notificationItem = document.createElement('div');
+            notificationItem.className = `notification-item notification-${notification.type}`;
+            notificationItem.dataset.id = notification.id;
+            
+            let icon = '⏰';
+            if (notification.type === 'vencida') {
+                icon = '⚠️';
+            }
+            
+            notificationItem.innerHTML = `
+                <div class="notification-icon">${icon}</div>
+                <div class="notification-content">
+                    <div class="notification-title">${notification.title}</div>
+                    <div class="notification-message">${notification.message}</div>
+                    <div class="notification-time">${notification.date}</div>
+                </div>
+            `;
+            
+            // Adiciona evento de clique na notificação para ir até a tarefa
+            notificationItem.addEventListener('click', function() {
+                // Fecha o painel de notificações
+                notificationsArea.classList.remove('show');
+                
+                // Scroll até a tarefa e destaca-a
+                const taskElement = notification.element;
+                if (taskElement) {
+                    // Remove destaques anteriores
+                    document.querySelectorAll('.highlight-task').forEach(el => {
+                        el.classList.remove('highlight-task');
+                    });
+                    
+                    // Adiciona destaque à tarefa
+                    taskElement.classList.add('highlight-task');
+                    
+                    // Scroll até a tarefa com animação suave
+                    taskElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+            
+            notificationList.appendChild(notificationItem);
+        });
+    }
+    
+    // Recarrega as notificações a cada 30 segundos
+    setInterval(checkDueTasks, 30000);
+}

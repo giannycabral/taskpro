@@ -23,7 +23,22 @@
             
             <div class="user-info">
                 <span>Olá, {{ usuario_nome }}!</span>
+                <div class="notification-bell">
+                    <span class="bell-icon">🔔</span>
+                    <span class="notification-count" id="notificationCount">0</span>
+                </div>
                 <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+            </div>
+        </div>
+        
+        <!-- Área de notificações de tarefas -->
+        <div class="notifications-area" id="notificationsArea">
+            <div class="notification-header">
+                <h3>Notificações de Tarefas</h3>
+                <button class="close-notifications" id="closeNotifications">×</button>
+            </div>
+            <div class="notification-list" id="notificationList">
+                <!-- As notificações serão inseridas aqui via JavaScript -->
             </div>
         </div>
         
