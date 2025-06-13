@@ -1,0 +1,439 @@
+/* TaskPro - Estilo Profissional Moderno para página principal */
+
+/* Importação de fontes */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
+
+/* Paleta de cores profissional */
+:root {
+    /* Cores primárias e secundárias */
+    --primary-color: #7B68EE; /* Lilás médio-escuro */
+    --primary-light: #9370DB; /* Lilás médio */
+    --primary-lighter: #B19CD9; /* Lilás claro */
+    --primary-dark: #5D4AB7; /* Lilás escuro */
+    --primary-darkest: #2D1B4E; /* Roxo muito escuro */
+    
+    --secondary-color: #FF69B4; /* Rosa quente */
+    --secondary-light: #FFA6CF; /* Rosa claro */
+    --secondary-dark: #FF1493; /* Rosa profundo */
+    
+    /* Cores de background e cartões */
+    --bg-color: #F8F9FD; /* Fundo claro */
+    --card-bg: #FFFFFF; /* Fundo do cartão - branco */
+    --header-bg: #FFFFFF; /* Fundo do cabeçalho */
+    --section-bg: #F8F9FD; /* Fundo das seções */
+    
+    /* Cores de texto */
+    --text-dark: #333333; /* Texto principal escuro */
+    --text-medium: #666666; /* Texto secundário */
+    --text-light: #999999; /* Texto terciário */
+    
+    /* Sombras e gradientes */
+    --card-shadow: 0 10px 25px rgba(123, 104, 238, 0.15); /* Sombra suave lilás */
+    --box-shadow: 0 4px 6px rgba(123, 104, 238, 0.1); /* Sombra para elementos */
+    --gradient: linear-gradient(135deg, #7B68EE, #FF69B4); /* Gradient lilás para rosa */
+    --gradient-hover: linear-gradient(135deg, #5D4AB7, #FF1493); /* Gradient hover */
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra padrão */
+    --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.15); /* Sombra ao passar mouse */
+    
+    /* Bordas */
+    --border-radius: 12px; /* Bordas arredondadas */
+    --button-radius: 8px; /* Bordas dos botões */
+    --input-radius: 8px; /* Bordas dos inputs */
+    --border-color: #E6E6FA; /* Borda lilás claro */
+    --input-border: #D8D8FF; /* Borda para inputs */
+    
+    /* Cores de status */
+    --success-color: #4CAF50; /* Verde */
+    --warning-color: #FF9800; /* Laranja */
+    --error-color: #F44336; /* Vermelho */
+    
+    /* Transições */
+    --transition: all 0.3s ease; /* Transição suave */
+    
+    /* Cores de status de tarefas */
+    --status-normal: #7B68EE; /* Lilás para tarefas normais */
+    --status-proxima: #FF9800; /* Laranja para tarefas próximas do vencimento */
+    --status-vencida: #F44336; /* Vermelho para tarefas vencidas */
+}
+
+/* Reset básico para elementos da página */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Corpo da página */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container principal */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Cabeçalho */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-icon {
+    font-size: 28px;
+    width: 50px;
+    height: 50px;
+    background: var(--gradient);
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: var(--shadow);
+}
+
+.logo h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin: 0;
+}
+
+.tagline {
+    font-size: 13px;
+    color: var(--text-medium);
+    margin: 0;
+}
+
+/* Informação do usuário */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 14px;
+}
+
+.user-info span {
+    color: var(--text-medium);
+    font-weight: 500;
+}
+
+.btn-logout {
+    background: var(--gradient);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: var(--button-radius);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+}
+
+.btn-logout:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+/* Títulos de seção */
+.section-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin: 30px 0 15px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--primary-lighter);
+}
+
+/* Formulários */
+form {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border-color);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+input[type="text"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--input-border);
+    border-radius: var(--input-radius);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--text-dark);
+    background-color: white;
+    transition: var(--transition);
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(123, 104, 238, 0.15);
+}
+
+button {
+    background: var(--gradient);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: var(--button-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    box-shadow: var(--shadow);
+}
+
+button:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+button.secondary {
+    background: var(--gradient-light);
+    background: linear-gradient(135deg, var(--primary-lighter), var(--secondary-light));
+}
+
+/* Filtros */
+.filters {
+    background: var(--card-bg);
+    padding: 15px 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border-color);
+}
+
+.filter-group {
+    display: inline-block;
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
+
+.filter-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-medium);
+    margin-right: 8px;
+}
+
+.filter-select {
+    padding: 8px 12px;
+    border-radius: var(--input-radius);
+    border: 1px solid var(--input-border);
+    background-color: white;
+    font-size: 14px;
+    color: var(--text-dark);
+    cursor: pointer;
+}
+
+/* Fieldset e categorias */
+fieldset {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin: 20px 0;
+    background: var(--card-bg);
+    box-shadow: var(--box-shadow);
+}
+
+legend {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary-dark);
+    padding: 0 10px;
+}
+
+.category-section {
+    margin-bottom: 25px;
+}
+
+.category-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: var(--primary-dark);
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--primary-lighter);
+}
+
+/* Lista de tarefas */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    background-color: white;
+    border-radius: var(--input-radius);
+    border-left: 3px solid var(--status-normal);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: var(--transition);
+}
+
+li:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+li.checked {
+    background-color: #F9F9FF;
+    border-left-color: var(--success-color);
+}
+
+li.checked .task-content {
+    text-decoration: line-through;
+    color: var(--text-light);
+}
+
+li.proxima {
+    border-left-color: var(--status-proxima);
+}
+
+li.vencida {
+    border-left-color: var(--status-vencida);
+}
+
+.task-content {
+    flex: 1;
+    font-size: 14px;
+}
+
+.task-meta {
+    display: block;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 5px;
+}
+
+.close {
+    color: var(--text-light);
+    font-size: 20px;
+    padding: 0 5px;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: var(--error-color);
+}
+
+/* Flash messages */
+.flash-messages {
+    margin-bottom: 20px;
+}
+
+.flash {
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    position: relative;
+    border-left: 4px solid transparent;
+}
+
+.flash.sucesso, .flash.success {
+    background-color: rgba(76, 175, 80, 0.1);
+    border-color: var(--success-color);
+    color: var(--success-color);
+}
+
+.flash.erro, .flash.error, .flash.danger {
+    background-color: rgba(244, 67, 54, 0.1);
+    border-color: var(--error-color);
+    color: var(--error-color);
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease-out forwards;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .logo {
+        margin: 0 auto;
+    }
+    
+    fieldset {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .filter-group {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .filter-select {
+        width: 100%;
+    }
+    
+    button {
+        width: 100%;
+    }
+}
