@@ -4,16 +4,20 @@
     max-width: 450px;
     padding: 45px;
     margin: 0 auto;
-    background-color: var(--glass-bg);
-    box-shadow: 0 15px 50px rgba(99, 102, 241, 0.15), 0 0 0 1px rgba(99, 102, 241, 0.05);
-    border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.75);
+    box-shadow: 
+        0 15px 50px rgba(99, 102, 241, 0.15),
+        0 5px 15px rgba(0, 0, 0, 0.05),
+        0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+    border-radius: 20px;
     text-align: center;
     position: relative;
     overflow: hidden;
-    border: var(--glass-border);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    border: none;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     animation: fadeIn 0.6s ease-out forwards;
+    transition: all 0.3s ease;
 }
 
 @keyframes fadeIn {
@@ -30,20 +34,15 @@
 .auth-container::after {
     content: "";
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     border-radius: 16px;
-    padding: 2px;
-    background: var(--gradient);
-    -webkit-mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-    mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+    box-shadow: inset 0 0 0 2px rgba(99, 102, 241, 0.3);
     opacity: 0.6;
     pointer-events: none;
+    z-index: 1;
 }
 
 .auth-container::before {
@@ -83,8 +82,9 @@
     margin-bottom: 25px;
     box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
     position: relative;
-    animation: gentle-float 3s ease-in-out infinite alternate;
+    animation: gentle-float 3s ease-in-out infinite alternate, fadeInUp 0.6s 0.2s forwards;
     z-index: 1;
+    opacity: 0;
 }
 
 .auth-logo::before {
@@ -100,6 +100,18 @@
     animation: pulse-glow 2s infinite alternate;
 }
 
+.auth-logo::after {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 15%;
+    left: 15%;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    filter: blur(5px);
+}
+
 @keyframes gentle-float {
     0% { transform: translateY(0); }
     100% { transform: translateY(-5px); }
@@ -113,7 +125,8 @@
 .auth-container h1 {
     color: var(--primary-color);
     font-size: 28px;
-    margin-bottom: 10px;
+    margin: 0 0 10px 0;
+    padding: 0;
     font-weight: 700;
     background: var(--gradient);
     -webkit-background-clip: text;
@@ -121,7 +134,10 @@
     -webkit-text-fill-color: transparent;
     letter-spacing: -0.5px;
     position: relative;
-    z-index: 1;
+    z-index: 5;
+    display: inline-block;
+    animation: fadeInUp 0.6s 0.4s forwards;
+    opacity: 0;
 }
 
 .auth-tagline {
@@ -131,6 +147,8 @@
     position: relative;
     display: inline-block;
     z-index: 1;
+    animation: fadeInUp 0.6s 0.6s forwards;
+    opacity: 0;
 }
 
 .auth-tagline::after {
@@ -149,6 +167,8 @@
     position: relative;
     z-index: 1;
     text-align: left;
+    animation: fadeInUp 0.6s 0.8s forwards;
+    opacity: 0;
 }
 
 .auth-form .form-group {
@@ -185,6 +205,8 @@
 
 .auth-form input:hover {
     border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
 }
 
 /* Efeito de label flutuante */
@@ -226,6 +248,8 @@
     margin-top: 30px;
     position: relative;
     z-index: 1;
+    animation: fadeInUp 0.6s 1s forwards;
+    opacity: 0;
 }
 
 .auth-links p {
@@ -269,4 +293,115 @@
     opacity: 0.8;
     position: relative;
     z-index: 1;
+    animation: fadeInUp 0.6s 1.2s forwards;
+    opacity: 0;
+}
+
+/* Mensagens flash em páginas de autenticação */
+.auth-container .flash-messages {
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.auth-container .flash {
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    font-weight: 500;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    display: flex;
+    align-items: center;
+}
+
+.auth-container .flash::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 5px;
+    border-radius: 5px 0 0 5px;
+}
+
+.auth-container .flash.erro,
+.auth-container .flash.error,
+.auth-container .flash.danger {
+    background-color: rgba(239, 68, 68, 0.08);
+    color: #dc2626;
+    font-weight: 600;
+}
+
+.auth-container .flash.erro::before,
+.auth-container .flash.error::before,
+.auth-container .flash.danger::before {
+    background-color: #dc2626;
+}
+
+.auth-container .flash.sucesso,
+.auth-container .flash.success {
+    background-color: rgba(16, 185, 129, 0.08);
+    color: #059669;
+}
+
+.auth-container .flash.sucesso::before,
+.auth-container .flash.success::before {
+    background-color: #059669;
+}
+
+/* Estilo específico para a mensagem "Por favor, faça login para acessar esta página" */
+.auth-container .flash.erro {
+    background-color: rgba(239, 68, 68, 0.08);
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #dc2626;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    position: relative;
+}
+
+.auth-container .flash.erro::before {
+    content: "⚠️";
+    margin-right: 10px;
+    font-size: 16px;
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Ajuste nas margens das mensagens flash para melhor espaçamento */
+.auth-container .flash-messages {
+    margin: 10px 0 25px;
+}
+
+.auth-container h1 {
+    margin-top: 0;
+    padding-top: 10px;
+    position: relative;
+    z-index: 2;
+}
+
+.auth-container::after {
+    z-index: 1;
+}
+
+.auth-container {
+    border: var(--glass-border);
+    position: relative;
+}
+
+/* Melhorando o efeito de fundo */
+body {
+    position: relative;
+    overflow-x: hidden;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8f9ff 0%, #eef1ff 100%);
 }

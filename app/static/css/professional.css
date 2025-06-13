@@ -674,21 +674,25 @@ li.checked {
     }
 }
 
-.flash.success {
+.flash.success,
+.flash.sucesso {
     background-color: rgba(16, 185, 129, 0.1);
     color: var(--success-color);
+    font-weight: 600;
 }
 
-.flash.success::before {
+.flash.success::before,
+.flash.sucesso::before {
     background-color: var(--success-color);
 }
 
-.flash.danger, .flash.error {
+.flash.danger, .flash.error, .flash.erro {
     background-color: rgba(239, 68, 68, 0.1);
     color: var(--warning-color);
+    font-weight: 600;
 }
 
-.flash.danger::before, .flash.error::before {
+.flash.danger::before, .flash.error::before, .flash.erro::before {
     background-color: var(--warning-color);
 }
 
@@ -1035,4 +1039,227 @@ li:hover {
     );
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
+}
+
+/* Animações dinâmicas de fundo */
+
+/* Padrão de bolhas flutuantes no fundo */
+@keyframes bubble-float {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    33% {
+        transform: translate(30px, -50px) rotate(10deg);
+    }
+    66% {
+        transform: translate(-20px, 20px) rotate(-5deg);
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+.container::before {
+    content: "";
+    position: absolute;
+    top: -150px;
+    right: -150px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+    z-index: -1;
+    opacity: 0.6;
+    animation: bubble-float 15s infinite ease-in-out;
+}
+
+/* Segunda bolha decorativa */
+.container::after {
+    content: "";
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+    z-index: -1;
+    opacity: 0.5;
+    animation: bubble-float 18s infinite ease-in-out reverse;
+}
+
+/* Efeito de foca nos botões durante a interação */
+button:focus, .btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3), 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+/* Efeitos no carregamento da página */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.gradient-bg {
+    background: linear-gradient(-45deg, #6366f1, #10b981, #f97316, #4f46e5);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    top: 0;
+    left: 0;
+}
+
+/* Classes de status para tarefas */
+.task-high-priority {
+    border-left: 4px solid #ef4444 !important;
+    background-color: rgba(239, 68, 68, 0.03);
+}
+
+.task-medium-priority {
+    border-left: 4px solid #f97316 !important;
+    background-color: rgba(249, 115, 22, 0.03);
+}
+
+.task-low-priority {
+    border-left: 4px solid #10b981 !important;
+    background-color: rgba(16, 185, 129, 0.03);
+}
+
+/* Efeitos para mensagens de confirmação */
+@keyframes confirmationPulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.confirmation-animation {
+    animation: confirmationPulse 0.6s ease-in-out;
+}
+
+/* Estilização para paginação (se aplicável) */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 30px 0 10px;
+}
+
+.page-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-weight: 600;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: var(--transition);
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--border-color);
+}
+
+.page-item:hover {
+    background-color: rgba(99, 102, 241, 0.1);
+    transform: translateY(-2px);
+}
+
+.page-item.active {
+    background: var(--gradient);
+    color: white;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+}
+
+/* Classes para estatísticas e resumos */
+.stats-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 25px 0;
+}
+
+.stat-card {
+    flex: 1;
+    min-width: 200px;
+    background-color: var(--glass-bg);
+    border-radius: 12px;
+    padding: 20px;
+    border: var(--glass-border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: var(--transition);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.12);
+}
+
+.stat-card .number {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.stat-card .label {
+    color: var(--text-light);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* Pista visual para arrastar (se implementar arraste no futuro) */
+.drag-handle {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    opacity: 0.3;
+    transition: var(--transition);
+    cursor: grab;
+}
+
+.drag-handle span {
+    width: 20px;
+    height: 2px;
+    background-color: var(--text-light);
+    border-radius: 3px;
+}
+
+li:hover .drag-handle {
+    opacity: 0.7;
+}
+
+/* Ajuste automático do tema conforme preferência */
+@media (prefers-reduced-motion) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }
