@@ -26,6 +26,7 @@ class Usuario(db.Model):
     data_registro = db.Column(db.DateTime, default=datetime.utcnow)
     tarefas = db.relationship('Tarefa', backref='proprietario', lazy=True)
     categorias = db.relationship('Categoria', backref='usuario', lazy=True)
+    notificacoes = db.relationship('Notificacao', backref='usuario', lazy=True)
     
     def set_senha(self, senha):
         self.senha_hash = generate_password_hash(senha)
@@ -95,6 +96,22 @@ class TarefaCompartilhada(db.Model):
     
     def __repr__(self):
         return f'<TarefaCompartilhada {self.tarefa_id} de {self.proprietario_id} para {self.usuario_compartilhado_id}>'
+
+# Modelo de Notificação
+class Notificacao(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    tipo = db.Column(db.String(50), nullable=False)  # 'compartilhamento', 'vencimento', etc.
+    conteudo = db.Column(db.String(500), nullable=False)
+    referencia_id = db.Column(db.Integer, nullable=True)  # ID da tarefa ou compartilhamento relacionado
+    lida = db.Column(db.Boolean, default=False)
+    data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relacionamento
+    usuario = db.relationship('Usuario', backref='notificacoes')
+    
+    def __repr__(self):
+        return f'<Notificacao {self.tipo} para {self.usuario_id}>'
 
 # Crie o banco de dados se não existir
 with app.app_context():
@@ -230,6 +247,9 @@ def index():
     # Verificar quantas tarefas foram compartilhadas com o usuário
     contagem_compartilhadas = TarefaCompartilhada.query.filter_by(usuario_compartilhado_id=usuario_id).count()
     
+    # Verificar quantas notificações não lidas o usuário possui
+    contagem_notificacoes = Notificacao.query.filter_by(usuario_id=usuario_id, lida=False).count()
+    
     return render_template(
         'index.html',
         tarefas=tarefas,
@@ -237,6 +257,7 @@ def index():
         categorias=categorias,
         tarefas_por_categoria=tarefas_por_categoria,
         contagem_compartilhadas=contagem_compartilhadas,
+        contagem_notificacoes=contagem_notificacoes,
         tarefas_sem_categoria=tarefas_sem_categoria,
         filtro_status=filtro_status,
         ordem=ordem
@@ -363,6 +384,19 @@ def compartilhar_tarefa(tarefa_id):
         )
         
         db.session.add(novo_compartilhamento)
+        
+        # Cria uma notificação para o destinatário
+        usuario_atual = Usuario.query.get(usuario_id)
+        tipo_permissao = "com permissão de edição" if permissao_edicao else "somente para visualização"
+        
+        nova_notificacao = Notificacao(
+            usuario_id=destinatario.id,
+            tipo='compartilhamento',
+            conteudo=f"{usuario_atual.nome} compartilhou uma tarefa com você ({tipo_permissao}): '{tarefa.conteudo}'",
+            referencia_id=tarefa_id
+        )
+        
+        db.session.add(nova_notificacao)
         db.session.commit()
         
         flash(f'Tarefa compartilhada com {destinatario.nome} com sucesso!', 'sucesso')
@@ -474,6 +508,63 @@ def editar_tarefa_compartilhada(compartilhamento_id):
             return redirect(url_for('tarefas_compartilhadas'))
     
     return render_template('editar_tarefa_compartilhada.html', tarefa=tarefa, compartilhamento=compartilhamento)
+
+@app.route('/notificacoes')
+@login_obrigatorio
+def notificacoes():
+    usuario_id = session.get('usuario_id')
+    
+    # Busca todas as notificações do usuário ordenadas por data (mais recentes primeiro)
+    notificacoes = Notificacao.query.filter_by(usuario_id=usuario_id).order_by(Notificacao.data_criacao.desc()).all()
+    
+    # Conta quantas notificações não foram lidas
+    notificacoes_nao_lidas = Notificacao.query.filter_by(usuario_id=usuario_id, lida=False).count()
+    
+    return render_template(
+        'notificacoes.html',
+        notificacoes=notificacoes,
+        notificacoes_nao_lidas=notificacoes_nao_lidas
+    )
+
+@app.route('/marcar_notificacao_lida/<int:notificacao_id>', methods=['POST'])
+@login_obrigatorio
+def marcar_notificacao_lida(notificacao_id):
+    usuario_id = session.get('usuario_id')
+    
+    # Busca a notificação e verifica se pertence ao usuário
+    notificacao = Notificacao.query.filter_by(id=notificacao_id, usuario_id=usuario_id).first_or_404()
+    
+    # Marca como lida
+    notificacao.lida = True
+    db.session.commit()
+    
+    return jsonify({'success': True})
+
+@app.route('/marcar_todas_notificacoes_lidas', methods=['POST'])
+@login_obrigatorio
+def marcar_todas_notificacoes_lidas():
+    usuario_id = session.get('usuario_id')
+    
+    # Busca todas as notificações não lidas
+    notificacoes = Notificacao.query.filter_by(usuario_id=usuario_id, lida=False).all()
+    
+    # Marca todas como lidas
+    for notificacao in notificacoes:
+        notificacao.lida = True
+    
+    db.session.commit()
+    
+    return jsonify({'success': True})
+
+@app.route('/api/notificacoes_contagem')
+@login_obrigatorio
+def api_notificacoes_contagem():
+    usuario_id = session.get('usuario_id')
+    
+    # Conta notificações não lidas
+    contagem = Notificacao.query.filter_by(usuario_id=usuario_id, lida=False).count()
+    
+    return jsonify({'nao_lidas': contagem})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5003)

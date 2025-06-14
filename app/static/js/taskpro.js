@@ -30,6 +30,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Adiciona animações sutis para melhorar a experiência do usuário
     animateElements();
+    
+    // Configurar o sistema de compartilhamento
+    setupSharingSystem();
 });
 
 // Função para alternar o status da tarefa (concluída/pendente)
@@ -329,4 +332,77 @@ function setupNotificationSystem() {
     
     // Recarrega as notificações a cada 30 segundos
     setInterval(checkDueTasks, 30000);
+}
+
+// Função para gerenciar o sistema de compartilhamento
+function setupSharingSystem() {
+    // Verificar se estamos na página de tarefas compartilhadas
+    const sharedTasksList = document.querySelector('.shared-tasks');
+    if (sharedTasksList) {
+        // Adicionar funcionalidade para visualizar detalhes de tarefas compartilhadas
+        document.querySelectorAll('.shared-task-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                // Ignora se o clique foi em um botão ou link
+                if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+                    return;
+                }
+                
+                // Alterna a classe expanded para mostrar/ocultar detalhes completos
+                this.classList.toggle('expanded');
+            });
+        });
+    }
+    
+    // Verificar se estamos na página de compartilhar tarefa
+    const shareForm = document.querySelector('.share-form');
+    if (shareForm) {
+        // Adicionar validação ao formulário de compartilhamento
+        shareForm.addEventListener('submit', function(e) {
+            const emailInput = document.getElementById('email');
+            if (!emailInput.value || !emailInput.value.includes('@')) {
+                e.preventDefault();
+                alert('Por favor, insira um email válido para compartilhar a tarefa.');
+            }
+        });
+        
+        // Adicionar exibição prévia do compartilhamento
+        const emailInput = document.getElementById('email');
+        const permissionCheckbox = document.getElementById('permissao_edicao');
+        const previewContainer = document.createElement('div');
+        previewContainer.className = 'share-preview';
+        previewContainer.style.display = 'none';
+        
+        if (emailInput && permissionCheckbox) {
+            const updatePreview = function() {
+                if (emailInput.value && emailInput.value.includes('@')) {
+                    const permissionText = permissionCheckbox.checked ? 'poderá editar esta tarefa' : 'apenas poderá visualizar esta tarefa';
+                    previewContainer.innerHTML = `
+                        <div class="preview-content">
+                            <strong>${emailInput.value}</strong> ${permissionText}.
+                        </div>
+                    `;
+                    previewContainer.style.display = 'block';
+                } else {
+                    previewContainer.style.display = 'none';
+                }
+            };
+            
+            emailInput.addEventListener('input', updatePreview);
+            permissionCheckbox.addEventListener('change', updatePreview);
+            
+            // Inserir a prévia após o último form-group
+            const formGroups = document.querySelectorAll('.form-group');
+            if (formGroups.length) {
+                formGroups[formGroups.length - 1].after(previewContainer);
+            }
+        }
+    }
+    
+    // Se houver um botão de compartilhamento na página principal
+    document.querySelectorAll('.btn-share').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            // Evita a propagação do clique para não marcar a tarefa como concluída
+            e.stopPropagation();
+        });
+    });
 }

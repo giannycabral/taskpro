@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificações - TaskPro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_icons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_main_icons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_share.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_notifications.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <span class="logo-icon">📝</span>
+                <div>
+                    <h1>TaskPro</h1>
+                    <p class="tagline">Sua lista de tarefas eficiente!</p>
+                </div>
+            </div>
+            
+            <div class="user-info">
+                <span>Olá, {{ session.get('usuario_nome') }}!</span>
+                <a href="{{ url_for('index') }}" class="btn-back">Voltar ao Início</a>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+            </div>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="section-title">
+            Notificações
+            <div class="notifications-actions">
+                <button id="markAllAsRead" class="mark-all-read-btn" {% if notificacoes_nao_lidas == 0 %}disabled{% endif %}>
+                    Marcar tudo como lido
+                </button>
+            </div>
+        </div>
+        
+        <div class="notifications-container">
+            {% if notificacoes %}
+                <div class="notifications-list">
+                    {% for notificacao in notificacoes %}
+                        <div class="notification-card {% if not notificacao.lida %}unread{% endif %}" data-id="{{ notificacao.id }}">
+                            <div class="notification-icon">
+                                {% if notificacao.tipo == 'compartilhamento' %}
+                                    👥
+                                {% elif notificacao.tipo == 'vencimento' %}
+                                    ⏰
+                                {% else %}
+                                    📌
+                                {% endif %}
+                            </div>
+                            <div class="notification-details">
+                                <div class="notification-content">{{ notificacao.conteudo }}</div>
+                                <div class="notification-meta">
+                                    <span class="notification-time">{{ notificacao.data_criacao.strftime('%d/%m/%Y às %H:%M') }}</span>
+                                    <span class="notification-status">{{ 'Não lida' if not notificacao.lida else 'Lida' }}</span>
+                                </div>
+                            </div>
+                            {% if not notificacao.lida %}
+                                <button class="mark-read-btn" data-id="{{ notificacao.id }}">Marcar como lida</button>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-notifications">
+                    <div class="no-notifications-icon">🔔</div>
+                    <p>Você não tem notificações</p>
+                    <p class="no-notifications-sub">Quando houver novidades, elas aparecerão aqui.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Marcar notificação individual como lida
+            document.querySelectorAll('.mark-read-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const notificationId = this.getAttribute('data-id');
+                    const notificationCard = document.querySelector(`.notification-card[data-id="${notificationId}"]`);
+                    
+                    fetch(`/marcar_notificacao_lida/${notificationId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Remover botão
+                            this.remove();
+                            
+                            // Atualizar status visual
+                            notificationCard.classList.remove('unread');
+                            const statusElement = notificationCard.querySelector('.notification-status');
+                            if (statusElement) {
+                                statusElement.textContent = 'Lida';
+                            }
+                            
+                            // Atualizar contador de não lidas
+                            updateUnreadCount();
+                        }
+                    })
+                    .catch(error => console.error('Erro ao marcar notificação como lida:', error));
+                });
+            });
+            
+            // Marcar todas as notificações como lidas
+            const markAllBtn = document.getElementById('markAllAsRead');
+            if (markAllBtn) {
+                markAllBtn.addEventListener('click', function() {
+                    if (this.disabled) return;
+                    
+                    fetch('/marcar_todas_notificacoes_lidas', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Atualizar todas as notificações na UI
+                            document.querySelectorAll('.notification-card.unread').forEach(card => {
+                                card.classList.remove('unread');
+                                const statusElement = card.querySelector('.notification-status');
+                                if (statusElement) {
+                                    statusElement.textContent = 'Lida';
+                                }
+                                
+                                const readBtn = card.querySelector('.mark-read-btn');
+                                if (readBtn) {
+                                    readBtn.remove();
+                                }
+                            });
+                            
+                            // Desabilitar o botão
+                            this.disabled = true;
+                        }
+                    })
+                    .catch(error => console.error('Erro ao marcar todas notificações como lidas:', error));
+                });
+            }
+            
+            // Função para atualizar o contador de notificações não lidas
+            function updateUnreadCount() {
+                const unreadNotifications = document.querySelectorAll('.notification-card.unread').length;
+                const markAllBtn = document.getElementById('markAllAsRead');
+                
+                if (markAllBtn) {
+                    markAllBtn.disabled = unreadNotifications === 0;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
