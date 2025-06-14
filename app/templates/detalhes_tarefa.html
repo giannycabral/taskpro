@@ -84,7 +84,7 @@
                 
                 <form action="{{ url_for('marcar_concluida', tarefa_id=tarefa.id) }}" method="post" class="toggle-form" id="toggleTaskForm">
                     <button type="submit" class="action-btn toggle-btn">
-                        <span class="btn-icon">{% if tarefa.concluida %}��{% else %}✓{% endif %}</span>
+                        <span class="btn-icon">{% if tarefa.concluida %}↩️{% else %}✓{% endif %}</span>
                         <span class="btn-text">{% if tarefa.concluida %}Reabrir{% else %}Concluir{% endif %}</span>
                     </button>
                 </form>
