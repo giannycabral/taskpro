@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compartilhar Tarefa - TaskPro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_icons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_main_icons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_share.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <span class="logo-icon">📝</span>
+                <div>
+                    <h1>TaskPro</h1>
+                    <p class="tagline">Sua lista de tarefas eficiente!</p>
+                </div>
+            </div>
+            
+            <div class="user-info">
+                <span>Olá, {{ session.get('usuario_nome') }}!</span>
+                <a href="{{ url_for('index') }}" class="btn-back">Voltar ao Início</a>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+            </div>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="section-title">Compartilhar Tarefa</div>
+        
+        <div class="task-share-details">
+            <h3>Detalhes da Tarefa</h3>
+            <div class="task-item">
+                <div class="task-content">
+                    {{ tarefa.conteudo }}
+                    {% if tarefa.data_vencimento %}
+                        <span class="task-meta">
+                            Vence em: {{ tarefa.data_vencimento.strftime('%d/%m/%Y') }}
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Adicionar Compartilhamento</div>
+        <form action="{{ url_for('compartilhar_tarefa', tarefa_id=tarefa.id) }}" method="POST" class="share-form">
+            <div class="form-group">
+                <label for="email">Email do Destinatário</label>
+                <input type="email" id="email" name="email" placeholder="Email do usuário" required>
+            </div>
+            
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="permissao_edicao" name="permissao_edicao" value="1">
+                <label for="permissao_edicao">Permitir edição da tarefa</label>
+            </div>
+            
+            <button type="submit" class="share-btn">Compartilhar Tarefa</button>
+        </form>
+
+        {% if compartilhamentos %}
+            <div class="section-title">Usuários com Acesso</div>
+            <div class="shared-users-list">
+                {% for compartilhamento in compartilhamentos %}
+                    <div class="shared-user-item">
+                        <div class="shared-user-info">
+                            <div class="shared-user-name">{{ compartilhamento.nome_usuario }}</div>
+                            <div class="shared-user-email">{{ compartilhamento.email_usuario }}</div>
+                            <div class="shared-user-permission">
+                                {% if compartilhamento.permissao_edicao %}
+                                    <span class="permission-badge edit">Pode editar</span>
+                                {% else %}
+                                    <span class="permission-badge view">Apenas visualização</span>
+                                {% endif %}
+                            </div>
+                            <div class="shared-user-date">Compartilhado em {{ compartilhamento.data }}</div>
+                        </div>
+                        <div class="shared-user-actions">
+                            <form action="{{ url_for('remover_compartilhamento', compartilhamento_id=compartilhamento.id) }}" method="POST">
+                                <button type="submit" class="remove-share-btn" onclick="return confirm('Tem certeza que deseja remover o compartilhamento com {{ compartilhamento.nome_usuario }}?')">Remover</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="no-shares">Esta tarefa ainda não foi compartilhada com ninguém.</p>
+        {% endif %}
+    </div>
+
+    <script src="{{ url_for('static', filename='js/taskpro.js') }}"></script>
+</body>
+
+</html>

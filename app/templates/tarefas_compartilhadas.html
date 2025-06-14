@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarefas Compartilhadas - TaskPro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_icons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_main_icons.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <span class="logo-icon">📝</span>
+                <div>
+                    <h1>TaskPro</h1>
+                    <p class="tagline">Sua lista de tarefas eficiente!</p>
+                </div>
+            </div>
+            
+            <div class="user-info">
+                <span>Olá, {{ session.get('usuario_nome') }}!</span>
+                <a href="{{ url_for('index') }}" class="btn-back">Voltar ao Início</a>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+            </div>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="section-title">Tarefas Compartilhadas Comigo</div>
+        
+        {% if tarefas_compartilhadas %}
+            <div class="shared-tasks">
+                {% for item in tarefas_compartilhadas %}
+                    <div class="shared-task-item {{ item.tarefa.status_vencimento }} {% if item.tarefa.concluida %}checked{% endif %}">
+                        <div class="shared-task-header">
+                            <span class="shared-by">Compartilhada por: <strong>{{ item.proprietario.nome }}</strong></span>
+                            <span class="shared-date">{{ item.data_compartilhamento.strftime('%d/%m/%Y') }}</span>
+                        </div>
+                        <div class="shared-task-content">
+                            <div class="task-content">
+                                {{ item.tarefa.conteudo }}
+                                {% if item.tarefa.data_vencimento %}
+                                    <span class="task-meta">
+                                        Vence em: {{ item.tarefa.data_vencimento.strftime('%d/%m/%Y') }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="shared-task-footer">
+                            <div class="shared-task-status">
+                                <span class="status-badge {% if item.tarefa.concluida %}completed{% else %}pending{% endif %}">
+                                    {% if item.tarefa.concluida %}Concluída{% else %}Pendente{% endif %}
+                                </span>
+                            </div>
+                            <div class="shared-task-actions">
+                                {% if item.permissao_edicao %}
+                                    <a href="{{ url_for('editar_tarefa_compartilhada', compartilhamento_id=item.compartilhamento_id) }}" class="edit-shared-btn">Editar Tarefa</a>
+                                {% else %}
+                                    <span class="view-only-badge">Somente visualização</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="no-shared-tasks">Nenhuma tarefa foi compartilhada com você.</p>
+        {% endif %}
+    </div>
+
+    <script src="{{ url_for('static', filename='js/taskpro.js') }}"></script>
+</body>
+
+</html>

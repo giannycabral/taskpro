@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Tarefa Compartilhada - TaskPro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_icons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_main_icons.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <span class="logo-icon">📝</span>
+                <div>
+                    <h1>TaskPro</h1>
+                    <p class="tagline">Sua lista de tarefas eficiente!</p>
+                </div>
+            </div>
+            
+            <div class="user-info">
+                <span>Olá, {{ session.get('usuario_nome') }}!</span>
+                <a href="{{ url_for('tarefas_compartilhadas') }}" class="btn-back">Voltar às Tarefas Compartilhadas</a>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+            </div>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="section-title">Editar Tarefa Compartilhada</div>
+        <div class="shared-info-banner">
+            <p>Esta tarefa foi compartilhada com você por <strong>{{ compartilhamento.proprietario.nome }}</strong> em {{ compartilhamento.data_compartilhamento.strftime('%d/%m/%Y') }}.</p>
+        </div>
+        
+        <form action="{{ url_for('editar_tarefa_compartilhada', compartilhamento_id=compartilhamento.id) }}" method="POST" class="edit-shared-form">
+            <div class="form-group">
+                <label for="tarefa">Conteúdo da Tarefa</label>
+                <textarea id="tarefa" name="tarefa" required>{{ tarefa.conteudo }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="data_vencimento">Data de Vencimento</label>
+                <input type="date" id="data_vencimento" name="data_vencimento" 
+                       value="{{ tarefa.data_vencimento.strftime('%Y-%m-%d') if tarefa.data_vencimento else '' }}">
+            </div>
+            
+            <button type="submit" class="edit-shared-submit-btn">Salvar Alterações</button>
+        </form>
+        
+        <div class="edit-shared-notice">
+            <p>Nota: Suas alterações serão visíveis para o proprietário da tarefa e todos que tenham acesso a ela.</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/taskpro.js') }}"></script>
+</body>
+
+</html>

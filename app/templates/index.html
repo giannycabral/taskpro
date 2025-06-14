@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_icons.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_main_icons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_share.css') }}">
 </head>
 
 <body>
@@ -27,6 +28,10 @@
                     <span class="bell-icon">🔔</span>
                     <span class="notification-count" id="notificationCount">0</span>
                 </div>
+                <a href="{{ url_for('tarefas_compartilhadas') }}" class="btn-shared-tasks">
+                    <span class="shared-tasks-icon">👥</span>
+                    <span class="shared-count">{{ contagem_compartilhadas }}</span>
+                </a>
                 <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
             </div>
         </div>
@@ -121,7 +126,12 @@
                                             </span>
                                         {% endif %}
                                     </div>
-                                    <span class="close">×</span>
+                                    <div class="task-actions">
+                                        <a href="{{ url_for('compartilhar_tarefa', tarefa_id=tarefa.id) }}" class="btn-share" title="Compartilhar Tarefa">
+                                            <span class="share-icon">👥</span>
+                                        </a>
+                                        <span class="close">×</span>
+                                    </div>
                                 </li>
                             {% endfor %}
                         {% else %}
@@ -144,7 +154,12 @@
                                         </span>
                                     {% endif %}
                                 </div>
-                                <span class="close">×</span>
+                                <div class="task-actions">
+                                    <a href="{{ url_for('compartilhar_tarefa', tarefa_id=tarefa.id) }}" class="btn-share" title="Compartilhar Tarefa">
+                                        <span class="share-icon">👥</span>
+                                    </a>
+                                    <span class="close">×</span>
+                                </div>
                             </li>
                         {% endfor %}
                     </ul>
