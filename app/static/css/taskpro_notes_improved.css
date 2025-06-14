@@ -1,0 +1,243 @@
+/* TaskPro - Estilos Aprimorados para Notas */
+
+/* Seção de notas - design aprimorado */
+.notes-section {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+    border-left: 4px solid var(--primary-color);
+    transition: var(--transition);
+}
+
+.notes-section:hover {
+    box-shadow: 0 8px 30px rgba(123, 104, 238, 0.15);
+}
+
+/* Efeito decorativo no canto superior direito */
+.notes-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, transparent 65%, rgba(123, 104, 238, 0.12) 100%);
+    border-radius: 0 0 0 120px;
+    pointer-events: none;
+    transition: var(--transition);
+}
+
+/* Efeito decorativo no canto inferior esquerdo */
+.notes-section::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(315deg, rgba(255, 105, 180, 0.08) 30%, transparent 100%);
+    border-radius: 0 80px 0 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.notes-form {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+/* Melhorias no textarea de notas */
+.notes-textarea {
+    width: 100%;
+    padding: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--input-radius);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-dark);
+    resize: vertical;
+    min-height: 200px;
+    transition: all 0.4s ease;
+    margin-bottom: 25px;
+    background-color: rgba(250, 250, 255, 0.6);
+    /* Efeito de linhas para área de texto */
+    background-image: linear-gradient(to bottom, rgba(123, 104, 238, 0.04) 1px, transparent 1px);
+    background-size: 100% 28px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+/* Estado de foco aprimorado */
+.notes-textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(123, 104, 238, 0.12);
+    background-color: white;
+    /* Borda gradiente quando em foco */
+    border-image: linear-gradient(to right, var(--primary-color), var(--secondary-color)) 1;
+}
+
+/* Botão de salvar notas aprimorado */
+.save-notes-btn {
+    background: var(--gradient);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: var(--button-radius);
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(123, 104, 238, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efeito de brilho no botão */
+.save-notes-btn::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    opacity: 0;
+    transform: rotate(30deg);
+    background: linear-gradient(
+        to right, 
+        rgba(255, 255, 255, 0.13) 0%,
+        rgba(255, 255, 255, 0.13) 77%,
+        rgba(255, 255, 255, 0.5) 92%,
+        rgba(255, 255, 255, 0.0) 100%
+    );
+}
+
+/* Ícone de notas */
+.save-notes-btn::before {
+    content: "📋";
+    margin-right: 10px;
+    font-size: 18px;
+    transition: transform 0.3s ease;
+}
+
+/* Efeitos hover no botão */
+.save-notes-btn:hover {
+    background: var(--gradient-hover);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px rgba(123, 104, 238, 0.35);
+}
+
+.save-notes-btn:hover::before {
+    transform: rotate(10deg);
+}
+
+.save-notes-btn:hover::after {
+    opacity: 1;
+    top: -30%;
+    left: -30%;
+    transition: all 0.7s ease;
+}
+
+.save-notes-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(123, 104, 238, 0.3);
+}
+
+/* Contador de caracteres para notas */
+.notes-char-counter {
+    position: absolute;
+    right: 12px;
+    bottom: 84px;
+    font-size: 12px;
+    color: var(--text-medium);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 3px 8px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.notes-char-counter.limit {
+    color: var(--error-color);
+}
+
+/* Rótulo flutuante para a área de notas */
+.notes-label {
+    position: absolute;
+    left: 15px;
+    top: 22px;
+    font-size: 14px;
+    color: var(--text-medium);
+    pointer-events: none;
+    transition: all 0.25s ease;
+    padding: 0 5px;
+    background-color: transparent;
+}
+
+.notes-textarea:focus + .notes-label,
+.notes-textarea:not(:placeholder-shown) + .notes-label {
+    top: -12px;
+    left: 12px;
+    font-size: 12px;
+    color: var(--primary-color);
+    background-color: white;
+    padding: 0 5px;
+    font-weight: 600;
+}
+
+/* Placeholder personalizado */
+.notes-textarea::placeholder {
+    color: rgba(102, 102, 102, 0.6);
+    font-style: italic;
+}
+
+/* Animação de carregamento para o botão de salvar */
+.save-notes-btn.saving {
+    background: var(--primary-light);
+    pointer-events: none;
+    position: relative;
+}
+
+.save-notes-btn.saving::before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: rotate 1s ease-in-out infinite;
+    margin-right: 10px;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsividade para telas pequenas */
+@media screen and (max-width: 768px) {
+    .notes-section {
+        padding: 20px;
+    }
+    
+    .notes-textarea {
+        padding: 15px;
+        min-height: 160px;
+    }
+    
+    .save-notes-btn {
+        width: 100%;
+        padding: 12px;
+    }
+    
+    .notes-char-counter {
+        bottom: 74px;
+    }
+}

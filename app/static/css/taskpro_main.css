@@ -183,6 +183,7 @@ form {
 
 input[type="text"],
 input[type="date"],
+input[type="time"],
 select {
     width: 100%;
     padding: 12px 15px;
@@ -197,6 +198,7 @@ select {
 
 input[type="text"]:focus,
 input[type="date"]:focus,
+input[type="time"]:focus,
 select:focus {
     outline: none;
     border-color: var(--primary-color);
@@ -225,6 +227,15 @@ button:hover {
 button.secondary {
     background: var(--gradient-light);
     background: linear-gradient(135deg, var(--primary-lighter), var(--secondary-light));
+}
+
+/* Texto de ajuda para formulários */
+.form-help {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: var(--text-medium);
+    font-style: italic;
 }
 
 /* Filtros */
@@ -640,6 +651,58 @@ li.vencida .task-meta {
     animation: slideIn 0.5s ease-out forwards;
 }
 
+/* Estilização para o grupo de input de hora */
+.time-input-group {
+    background-color: rgba(123, 104, 238, 0.05);
+    padding: 12px 15px;
+    border-radius: var(--border-radius);
+    border-left: 3px solid var(--primary-color);
+    position: relative; /* Necessário para posicionamento do pseudo-elemento */
+}
+
+.time-label {
+    display: block;
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.time-input {
+    width: auto !important;
+    min-width: 150px;
+    display: inline-block;
+    background-color: white;
+    position: relative;
+    padding-right: 35px !important; /* Espaço para o ícone */
+}
+
+.time-input-group .form-help {
+    margin-top: 8px;
+    color: var(--text-medium);
+}
+
+/* Adiciona um pseudo-elemento com ícone de relógio */
+.time-input-group::after {
+    content: "⏰";
+    position: absolute;
+    right: 35px;
+    top: 52px;
+    font-size: 16px;
+    pointer-events: none;
+    color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    .time-input {
+        width: 100% !important;
+    }
+    
+    .time-input-group::after {
+        right: 25px;
+    }
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
     .header {
@@ -675,4 +738,86 @@ li.vencida .task-meta {
     button {
         width: 100%;
     }
+}
+
+/* Botão de voltar ao início */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    background-color: white;
+    color: var(--primary-dark);
+    border: 2px solid var(--primary-lighter);
+    padding: 7px 14px;
+    border-radius: var(--button-radius);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn-back::before {
+    content: "⬅️";
+    margin-right: 8px;
+    font-size: 15px;
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+/* Efeito de gradiente ao passar o mouse */
+.btn-back::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: var(--gradient);
+    opacity: 0.1;
+    z-index: -1;
+    transition: width 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.btn-back:hover {
+    color: var(--primary-dark);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(123, 104, 238, 0.2);
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.btn-back:hover::before {
+    transform: translateX(-4px);
+    animation: pulse 1s infinite alternate;
+}
+
+.btn-back:hover::after {
+    width: 100%;
+}
+
+.btn-back:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(123, 104, 238, 0.1);
+}
+
+/* Responsividade do botão de voltar */
+@media (max-width: 768px) {
+    .btn-back {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+    
+    .btn-back::before {
+        font-size: 14px;
+        margin-right: 5px;
+    }
+}
+
+/* Animação de pulso para o ícone do botão de voltar */
+@keyframes pulse {
+    from { opacity: 0.8; }
+    to { opacity: 1; }
 }

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_icons.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_main_icons.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_share.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_form_notes.css') }}">
 </head>
 
 <body>
@@ -73,6 +74,16 @@
             <div class="form-group">
                 <input type="date" name="data_vencimento" placeholder="Data de vencimento">
             </div>
+            <div class="form-group time-input-group">
+                <label for="hora_criacao" class="time-label">Definir hora personalizada:</label>
+                <input type="time" id="hora_criacao" name="hora_criacao" class="time-input">
+                <small class="form-help">Opcional - Se não definido, será usada a hora atual</small>
+            </div>
+            <div class="form-group notes-input-container">
+                <textarea name="notas" id="taskNotes" class="notes-input" placeholder=" " rows="3" maxlength="1000"></textarea>
+                <label for="taskNotes" class="notes-label">Notas adicionais (opcional)</label>
+                <div class="notes-char-counter"><span id="notesCharCount">0</span>/1000</div>
+            </div>
             <button type="submit" id="addButton">Adicionar Tarefa</button>
         </form>
 
@@ -125,8 +136,21 @@
                                                 Vence em: {{ tarefa.data_vencimento.strftime('%d/%m/%Y') }}
                                             </span>
                                         {% endif %}
+                                        {% if tarefa.notas or tarefa.anexos %}
+                                            <div class="task-indicators">
+                                                {% if tarefa.notas %}
+                                                    <span class="notes-indicator" data-tooltip="Possui notas detalhadas">📝 Notas</span>
+                                                {% endif %}
+                                                {% if tarefa.anexos %}
+                                                    <span class="attachments-indicator" data-tooltip="Possui arquivos anexos">📎 Anexos</span>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
                                     </div>
                                     <div class="task-actions">
+                                        <a href="{{ url_for('detalhes_tarefa', tarefa_id=tarefa.id) }}" class="btn-details" title="Ver detalhes da tarefa">
+                                            <span class="details-icon">🔍</span>
+                                        </a>
                                         <a href="{{ url_for('compartilhar_tarefa', tarefa_id=tarefa.id) }}" class="btn-share" title="Compartilhar Tarefa">
                                             <span class="share-icon">👥</span>
                                         </a>
@@ -153,8 +177,21 @@
                                             Vence em: {{ tarefa.data_vencimento.strftime('%d/%m/%Y') }}
                                         </span>
                                     {% endif %}
+                                    {% if tarefa.notas or tarefa.anexos %}
+                                        <div class="task-indicators">
+                                            {% if tarefa.notas %}
+                                                <span class="notes-indicator" data-tooltip="Possui notas detalhadas">📝 Notas</span>
+                                            {% endif %}
+                                            {% if tarefa.anexos %}
+                                                <span class="attachments-indicator" data-tooltip="Possui arquivos anexos">📎 Anexos</span>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
                                 </div>
                                 <div class="task-actions">
+                                    <a href="{{ url_for('detalhes_tarefa', tarefa_id=tarefa.id) }}" class="btn-details" title="Ver detalhes da tarefa">
+                                        <span class="details-icon">🔍</span>
+                                    </a>
                                     <a href="{{ url_for('compartilhar_tarefa', tarefa_id=tarefa.id) }}" class="btn-share" title="Compartilhar Tarefa">
                                         <span class="share-icon">👥</span>
                                     </a>
@@ -169,6 +206,37 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/taskpro.js') }}"></script>
+    
+    <script>
+        // Script para contador de caracteres na caixa de notas
+        document.addEventListener('DOMContentLoaded', function() {
+            const notesTextarea = document.getElementById('taskNotes');
+            const notesCharCount = document.getElementById('notesCharCount');
+            
+            if (notesTextarea && notesCharCount) {
+                // Função para atualizar o contador de caracteres
+                function updateNotesCharCount() {
+                    const count = notesTextarea.value.length;
+                    notesCharCount.textContent = count;
+                    
+                    // Mudar cor quando estiver chegando ao limite
+                    const charCounter = notesCharCount.parentElement;
+                    if (count > 800) {
+                        charCounter.classList.add('limit');
+                    } else {
+                        charCounter.classList.remove('limit');
+                    }
+                }
+                
+                // Inicializar contador
+                updateNotesCharCount();
+                
+                // Adicionar event listeners para atualização em tempo real
+                notesTextarea.addEventListener('input', updateNotesCharCount);
+                notesTextarea.addEventListener('keyup', updateNotesCharCount);
+            }
+        });
+    </script>
 </body>
 
 </html>

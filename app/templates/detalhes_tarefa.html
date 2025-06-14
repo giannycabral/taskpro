@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes da Tarefa - TaskPro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_icons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_main_icons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_share.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_attachments.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_notes_improved.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <span class="logo-icon">📝</span>
+                <div>
+                    <h1>TaskPro</h1>
+                    <p class="tagline">Sua lista de tarefas eficiente!</p>
+                </div>
+            </div>
+            
+            <div class="user-info">
+                <span>Olá, {{ session.get('usuario_nome') }}!</span>
+                <a href="{{ url_for('index') }}" class="btn-back">Voltar ao Início</a>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+            </div>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="section-title">Detalhes da Tarefa</div>
+        
+        <div class="task-details-card {% if tarefa.concluida %}completed{% endif %} {{ tarefa.status_vencimento }}">
+            <div class="task-header">
+                <h2 class="task-title">{{ tarefa.conteudo }}</h2>
+                <div class="task-status-badge">
+                    {% if tarefa.concluida %}
+                        <span class="status completed">Concluída</span>
+                    {% else %}
+                        <span class="status pending">Pendente</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="task-info">
+                <div class="info-item">
+                    <span class="info-label">Criada em:</span>
+                    <span class="info-value">{{ tarefa.data_criacao.strftime('%d/%m/%Y %H:%M') }}</span>
+                </div>
+                
+                {% if tarefa.data_vencimento %}
+                <div class="info-item">
+                    <span class="info-label">Vence em:</span>
+                    <span class="info-value due-date {{ tarefa.status_vencimento }}">{{ tarefa.data_vencimento.strftime('%d/%m/%Y') }}</span>
+                </div>
+                {% endif %}
+                
+                {% if tarefa.categoria %}
+                <div class="info-item">
+                    <span class="info-label">Categoria:</span>
+                    <span class="info-value">{{ tarefa.categoria.nome }}</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="task-actions-bar">
+                <a href="{{ url_for('compartilhar_tarefa', tarefa_id=tarefa.id) }}" class="action-btn share-btn">
+                    <span class="btn-icon">👥</span>
+                    <span class="btn-text">Compartilhar</span>
+                </a>
+                
+                <form action="{{ url_for('marcar_concluida', tarefa_id=tarefa.id) }}" method="post" class="toggle-form" id="toggleTaskForm">
+                    <button type="submit" class="action-btn toggle-btn">
+                        <span class="btn-icon">{% if tarefa.concluida %}��{% else %}✓{% endif %}</span>
+                        <span class="btn-text">{% if tarefa.concluida %}Reabrir{% else %}Concluir{% endif %}</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="section-title">Notas</div>
+        <div class="notes-section">
+            <form action="{{ url_for('atualizar_notas', tarefa_id=tarefa.id) }}" method="POST" class="notes-form">
+                <div class="notes-field-container">
+                    <textarea name="notas" id="notesTextarea" rows="5" class="notes-textarea" placeholder=" " maxlength="2000">{{ tarefa.notas or '' }}</textarea>
+                    <label for="notesTextarea" class="notes-label">Adicione notas detalhadas sobre esta tarefa</label>
+                    <div class="notes-char-counter"><span id="charCount">0</span>/2000</div>
+                </div>
+                <button type="submit" class="save-notes-btn" id="saveNotesBtn">Salvar Notas</button>
+            </form>
+        </div>
+
+        <div class="section-title">Anexos</div>
+        <div class="attachments-section">
+            {% if anexos %}
+                <div class="attachments-list">
+                    {% for anexo in anexos %}
+                        <div class="attachment-card">
+                            <div class="attachment-icon">
+                                {% if anexo.tipo_arquivo and 'image' in anexo.tipo_arquivo %}
+                                🖼️
+                                {% elif anexo.tipo_arquivo and 'pdf' in anexo.tipo_arquivo %}
+                                📄
+                                {% elif anexo.tipo_arquivo and ('document' in anexo.tipo_arquivo or 'word' in anexo.tipo_arquivo) %}
+                                📃
+                                {% elif anexo.tipo_arquivo and ('excel' in anexo.tipo_arquivo or 'sheet' in anexo.tipo_arquivo) %}
+                                📊
+                                {% elif anexo.tipo_arquivo and ('zip' in anexo.tipo_arquivo or 'compressed' in anexo.tipo_arquivo) %}
+                                🗜️
+                                {% else %}
+                                📎
+                                {% endif %}
+                            </div>
+                            <div class="attachment-info">
+                                <div class="attachment-name">{{ anexo.nome_arquivo }}</div>
+                                <div class="attachment-meta">
+                                    <span class="attachment-size">{{ (anexo.tamanho / 1024)|round(1) }} KB</span>
+                                    <span class="attachment-date">{{ anexo.data_upload.strftime('%d/%m/%Y') }}</span>
+                                </div>
+                            </div>
+                            <div class="attachment-actions">
+                                <a href="{{ url_for('download_anexo', anexo_id=anexo.id) }}" class="attachment-download" title="Baixar arquivo">
+                                    <span class="download-icon">⬇️</span>
+                                </a>
+                                <form action="{{ url_for('excluir_anexo', anexo_id=anexo.id) }}" method="POST" class="attachment-delete-form">
+                                    <button type="submit" class="attachment-delete" title="Excluir arquivo" onclick="return confirm('Tem certeza que deseja excluir este anexo?')">
+                                        <span class="delete-icon">🗑️</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="no-attachments">Esta tarefa ainda não possui anexos.</p>
+            {% endif %}
+            
+            <form action="{{ url_for('adicionar_anexo', tarefa_id=tarefa.id) }}" method="POST" enctype="multipart/form-data" class="attachment-form">
+                <div class="attachment-upload">
+                    <label for="arquivo" class="upload-label">
+                        <span class="upload-icon">📤</span>
+                        <span class="upload-text">Escolher Arquivo</span>
+                    </label>
+                    <input type="file" id="arquivo" name="arquivo" class="file-input" onchange="updateFileName(this)">
+                    <span id="file-name" class="selected-file-name">Nenhum arquivo selecionado</span>
+                </div>
+                <button type="submit" class="upload-btn">Anexar Arquivo</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Função para atualizar o nome do arquivo selecionado
+        function updateFileName(input) {
+            const fileName = document.getElementById('file-name');
+            if (input.files.length > 0) {
+                fileName.textContent = input.files[0].name;
+                fileName.classList.add('file-selected');
+            } else {
+                fileName.textContent = 'Nenhum arquivo selecionado';
+                fileName.classList.remove('file-selected');
+            }
+        }
+
+        // Script para contador de caracteres e animações
+        document.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.getElementById('notesTextarea');
+            const charCount = document.getElementById('charCount');
+            const counter = document.querySelector('.notes-char-counter');
+            const saveButton = document.getElementById('saveNotesBtn');
+            
+            // Inicializar contador
+            if (textarea && charCount) {
+                const updateCharCount = () => {
+                    const count = textarea.value.length;
+                    charCount.textContent = count;
+                    
+                    // Mudar estilo quando estiver perto do limite
+                    if (count > 1800) {
+                        counter.classList.add('limit');
+                    } else {
+                        counter.classList.remove('limit');
+                    }
+                };
+                
+                // Configurar eventos
+                textarea.addEventListener('input', updateCharCount);
+                textarea.addEventListener('keyup', updateCharCount);
+                
+                // Inicializar contagem
+                updateCharCount();
+                
+                // Animação ao enviar o formulário
+                if (saveButton) {
+                    textarea.form.addEventListener('submit', function(e) {
+                        if (!textarea.value.trim()) {
+                            e.preventDefault(); // Evitar envio se estiver vazio
+                            textarea.focus();
+                            return false;
+                        }
+                        
+                        // Adicionar classe de animação
+                        saveButton.classList.add('saving');
+                        saveButton.innerHTML = 'Salvando...';
+                        
+                        // Permitir que a animação seja vista antes do envio
+                        setTimeout(() => {
+                            return true; // Continuar com o envio
+                        }, 300);
+                    });
+                }
+            }
+            
+            // Lidar com o formulário de toggle (concluir/reabrir tarefa)
+            const toggleForm = document.getElementById('toggleTaskForm');
+            if (toggleForm) {
+                toggleForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const button = this.querySelector('.toggle-btn');
+                    const originalText = button.innerHTML;
+                    
+                    // Mostrar feedback visual
+                    button.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Processando...</span>';
+                    button.disabled = true;
+                    
+                    // Enviar formulário via fetch API
+                    fetch(this.action, {
+                        method: 'POST',
+                        body: new FormData(this),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // Recarregar a página atual para mostrar as mudanças
+                            window.location.reload();
+                        } else {
+                            // Caso haja erro, restaurar botão
+                            button.innerHTML = originalText;
+                            button.disabled = false;
+                            alert('Ocorreu um erro. Por favor, tente novamente.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                        alert('Ocorreu um erro de conexão. Por favor, tente novamente.');
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

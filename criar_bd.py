@@ -1,4 +1,5 @@
-from app import app, db, Usuario, Tarefa, Categoria
+from app import app, db, Usuario, Tarefa, Categoria, Anexo
+import os, shutil
 from datetime import datetime, date, timedelta
 
 # Criar o banco de dados com as tabelas corretas
@@ -27,6 +28,12 @@ with app.app_context():
     ontem = hoje - timedelta(days=1)
     proximo_mes = hoje + timedelta(days=30)
     
+    # Limpar a pasta de uploads
+    upload_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'app', 'uploads')
+    if os.path.exists(upload_folder):
+        shutil.rmtree(upload_folder)
+    os.makedirs(upload_folder, exist_ok=True)
+    
     # Cria tarefas de exemplo
     tarefas = [
         # Sem categoria e sem vencimento
@@ -37,7 +44,8 @@ with app.app_context():
         Tarefa(conteudo="Reunião importante (vencida)", 
               usuario_id=usuario_teste.id, 
               categoria_id=cat_trabalho.id, 
-              data_vencimento=ontem),
+              data_vencimento=ontem,
+              notas="Preparar apresentação para reunião com diretores. Levar relatório semestral e dados de vendas."),
         
         Tarefa(conteudo="Enviar relatório (amanhã)", 
               usuario_id=usuario_teste.id, 
@@ -47,13 +55,15 @@ with app.app_context():
         Tarefa(conteudo="Planejar próximo trimestre", 
               usuario_id=usuario_teste.id, 
               categoria_id=cat_trabalho.id, 
-              data_vencimento=proxima_semana),
+              data_vencimento=proxima_semana,
+              notas="Incluir metas de marketing, projeções financeiras e plano de contratações."),
         
         # Tarefas pessoais
         Tarefa(conteudo="Comprar presente de aniversário", 
               usuario_id=usuario_teste.id, 
               categoria_id=cat_pessoal.id, 
-              data_vencimento=amanha),
+              data_vencimento=amanha,
+              notas="Ideias: livro, relógio ou vale-presente da loja favorita."),
         
         Tarefa(conteudo="Marcar consulta médica", 
               usuario_id=usuario_teste.id, 
@@ -63,7 +73,8 @@ with app.app_context():
         Tarefa(conteudo="Estudar para prova de Python", 
               usuario_id=usuario_teste.id, 
               categoria_id=cat_estudos.id, 
-              data_vencimento=proximo_mes)
+              data_vencimento=proximo_mes,
+              notas="Tópicos importantes: Classes, Herança, Decoradores e Gerenciamento de Exceções.\nConsultar material de apoio enviado pelo professor.")
     ]
     
     db.session.add_all(tarefas)

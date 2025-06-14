@@ -62,41 +62,153 @@
 /* Formulário para compartilhar tarefas */
 .share-form {
     background-color: var(--card-bg);
-    padding: 20px;
+    padding: 25px;
     border-radius: var(--border-radius);
     box-shadow: var(--card-shadow);
+    margin-bottom: 30px;
+    border-top: 4px solid var(--primary-color);
+    position: relative;
+}
+
+.share-form .form-group {
     margin-bottom: 20px;
+}
+
+.share-form .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 14px;
+}
+
+.form-group input[type="email"] {
+    padding: 12px 15px 12px 45px; /* Aumentado o padding-left para o ícone */
+    width: 100%;
+    border: 2px solid var(--border-color);
+    border-radius: var(--input-radius);
+    background-color: white;
+    font-size: 15px;
+    transition: var(--transition);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%237B68EE' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z'%3E%3C/path%3E%3Cpolyline points='22,6 12,13 2,6'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 15px center;
+    background-size: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.form-group input[type="email"]:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(123, 104, 238, 0.15);
+    outline: none;
+}
+
+.form-group input[type="email"]::placeholder {
+    color: var(--text-light);
+    opacity: 0.7;
 }
 
 .checkbox-group {
     display: flex;
     align-items: center;
+    margin: 20px 0;
+    position: relative;
+    padding-left: 35px; /* Espaço para o ícone personalizado */
 }
 
 .checkbox-group input[type="checkbox"] {
-    width: auto;
-    margin-right: 8px;
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Ícone personalizado para o checkbox */
+.checkbox-group label::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--primary-light);
+    border-radius: 6px;
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+/* Ícone quando o checkbox está marcado */
+.checkbox-group input[type="checkbox"]:checked + label::before {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Símbolo de marca de seleção */
+.checkbox-group input[type="checkbox"]:checked + label::after {
+    content: "";
+    position: absolute;
+    left: 9px;
+    top: 5px;
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: translateY(0%) rotate(45deg);
 }
 
 .checkbox-group label {
     display: inline;
     margin: 0;
+    cursor: pointer;
+    font-weight: 500;
+    padding-top: 2px;
+    color: var(--text-medium);
+}
+
+.checkbox-group:hover label::before {
+    border-color: var(--primary-color);
 }
 
 .share-btn {
     background: var(--gradient);
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 14px 20px;
     border-radius: var(--button-radius);
     cursor: pointer;
     font-weight: 600;
     transition: var(--transition);
+    width: 100%;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+}
+
+.share-btn::before {
+    content: "";
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    margin-right: 10px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='18' cy='5' r='3'%3E%3C/circle%3E%3Ccircle cx='6' cy='12' r='3'%3E%3C/circle%3E%3Ccircle cx='18' cy='19' r='3'%3E%3C/circle%3E%3Cline x1='8.59' y1='13.51' x2='15.42' y2='17.49'%3E%3C/line%3E%3Cline x1='15.41' y1='6.51' x2='8.59' y2='10.49'%3E%3C/line%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 
 .share-btn:hover {
+    background: var(--gradient-hover);
     box-shadow: var(--shadow-hover);
     transform: translateY(-2px);
+}
+
+.share-form .form-group input[type="email"]:hover {
+    border-color: var(--primary-lighter);
 }
 
 /* Lista de usuários com acesso */
@@ -336,8 +448,11 @@
     background-color: var(--card-bg);
     padding: 20px;
     border-radius: var(--border-radius);
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    position: relative;
+    border-left: 4px solid var(--secondary-color);
 }
 
 .task-share-details h3 {
@@ -372,4 +487,55 @@
     .shared-date {
         margin-top: 5px;
     }
+}
+
+.checkbox-group:hover input[type="checkbox"] + label {
+    color: var(--primary-dark);
+}
+
+.checkbox-group input[type="checkbox"]:focus + label::before {
+    box-shadow: 0 0 0 3px rgba(123, 104, 238, 0.2);
+}
+
+/* Animação do botão para feedback visual */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(123, 104, 238, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(123, 104, 238, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(123, 104, 238, 0);
+    }
+}
+
+.share-btn:active {
+    animation: pulse 0.3s forwards;
+    transform: scale(0.98);
+}
+
+/* Melhoria para o card quando a tarefa é compartilhada */
+.task-share-details:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+.task-share-details h3 {
+    font-size: 18px;
+}
+
+/* Adiciona um status de compartilhamento visível */
+.task-share-details::after {
+    content: "Compartilhando";
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    background: var(--gradient);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: var(--shadow);
+    letter-spacing: 0.5px;
 }

@@ -1,14 +1,29 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, date
 import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tarefas.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.urandom(24)  # Chave secreta para sessões
 db = SQLAlchemy(app)
+
+# Configurações para o upload de arquivos
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'app', 'uploads')
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip'}
+MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB limite
+
+# Assegurar que o diretório de uploads existe
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # Modelo de Categoria
 class Categoria(db.Model):
@@ -26,7 +41,7 @@ class Usuario(db.Model):
     data_registro = db.Column(db.DateTime, default=datetime.utcnow)
     tarefas = db.relationship('Tarefa', backref='proprietario', lazy=True)
     categorias = db.relationship('Categoria', backref='usuario', lazy=True)
-    notificacoes = db.relationship('Notificacao', backref='usuario', lazy=True)
+    notificacoes = db.relationship('Notificacao', backref=db.backref('usuario_ref', lazy=True), lazy=True)
     
     def set_senha(self, senha):
         self.senha_hash = generate_password_hash(senha)
@@ -37,6 +52,21 @@ class Usuario(db.Model):
     def __repr__(self):
         return f'<Usuario {self.email}>'
 
+# Definição do modelo TarefaCompartilhada para referência posterior
+class TarefaCompartilhada(db.Model):
+    __tablename__ = 'tarefa_compartilhada'
+    id = db.Column(db.Integer, primary_key=True)
+    tarefa_id = db.Column(db.Integer, db.ForeignKey('tarefa.id'), nullable=False)
+    proprietario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    usuario_compartilhado_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    data_compartilhamento = db.Column(db.DateTime, default=datetime.utcnow)
+    permissao_edicao = db.Column(db.Boolean, default=False)  # Define se o usuário pode editar a tarefa
+    
+    # Relacionamentos a serem definidos após a classe Tarefa
+    
+    def __repr__(self):
+        return f'<TarefaCompartilhada {self.tarefa_id} de {self.proprietario_id} para {self.usuario_compartilhado_id}>'
+
 # Modelo de Tarefa
 class Tarefa(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -46,9 +76,11 @@ class Tarefa(db.Model):
     data_vencimento = db.Column(db.Date, nullable=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     categoria_id = db.Column(db.Integer, db.ForeignKey('categoria.id'), nullable=True)
-
+    notas = db.Column(db.Text, nullable=True)  # Campo para notas/descrição detalhada da tarefa
+    
     # Relacionamentos
     compartilhamentos = db.relationship('TarefaCompartilhada', foreign_keys=[TarefaCompartilhada.tarefa_id], backref='tarefa_origem', lazy=True)
+    anexos = db.relationship('Anexo', backref='tarefa', lazy=True, cascade="all, delete-orphan")  # Relação com os anexos
 
     def __repr__(self):
         return f'<Tarefa {self.conteudo}>'
@@ -80,22 +112,10 @@ class Tarefa(db.Model):
         else:
             return 'normal'
 
-# Modelo de Compartilhamento de Tarefas
-class TarefaCompartilhada(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    tarefa_id = db.Column(db.Integer, db.ForeignKey('tarefa.id'), nullable=False)
-    proprietario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
-    usuario_compartilhado_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
-    data_compartilhamento = db.Column(db.DateTime, default=datetime.utcnow)
-    permissao_edicao = db.Column(db.Boolean, default=False)  # Define se o usuário pode editar a tarefa
-    
-    # Relacionamentos
-    tarefa = db.relationship('Tarefa', foreign_keys=[tarefa_id], backref='compartilhamentos')
-    proprietario = db.relationship('Usuario', foreign_keys=[proprietario_id], backref='tarefas_compartilhadas_por_mim')
-    usuario_compartilhado = db.relationship('Usuario', foreign_keys=[usuario_compartilhado_id], backref='tarefas_compartilhadas_comigo')
-    
-    def __repr__(self):
-        return f'<TarefaCompartilhada {self.tarefa_id} de {self.proprietario_id} para {self.usuario_compartilhado_id}>'
+# Adicionando os relacionamentos ao modelo TarefaCompartilhada
+TarefaCompartilhada.tarefa = db.relationship('Tarefa', foreign_keys=[TarefaCompartilhada.tarefa_id], backref='compartilhamentos_recebidos')
+TarefaCompartilhada.proprietario = db.relationship('Usuario', foreign_keys=[TarefaCompartilhada.proprietario_id], backref='tarefas_compartilhadas_por_mim')
+TarefaCompartilhada.usuario_compartilhado = db.relationship('Usuario', foreign_keys=[TarefaCompartilhada.usuario_compartilhado_id], backref='tarefas_compartilhadas_comigo')
 
 # Modelo de Notificação
 class Notificacao(db.Model):
@@ -107,11 +127,24 @@ class Notificacao(db.Model):
     lida = db.Column(db.Boolean, default=False)
     data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Relacionamento
-    usuario = db.relationship('Usuario', backref='notificacoes')
+    # Relacionamento já está definido na classe Usuario
     
     def __repr__(self):
         return f'<Notificacao {self.tipo} para {self.usuario_id}>'
+
+# Modelo de Anexo
+class Anexo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome_arquivo = db.Column(db.String(255), nullable=False)  # Nome original do arquivo
+    caminho_arquivo = db.Column(db.String(500), nullable=False)  # Caminho para o arquivo no servidor
+    tipo_arquivo = db.Column(db.String(100), nullable=True)  # MIME type do arquivo
+    tamanho = db.Column(db.Integer, nullable=True)  # Tamanho em bytes
+    data_upload = db.Column(db.DateTime, default=datetime.utcnow)
+    tarefa_id = db.Column(db.Integer, db.ForeignKey('tarefa.id'), nullable=False)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    
+    def __repr__(self):
+        return f'<Anexo {self.nome_arquivo} para tarefa {self.tarefa_id}>'
 
 # Crie o banco de dados se não existir
 with app.app_context():
@@ -269,6 +302,7 @@ def adicionar_tarefa():
     conteudo = request.form.get('tarefa')
     categoria_id = request.form.get('categoria_id')
     data_vencimento_str = request.form.get('data_vencimento')
+    hora_criacao_str = request.form.get('hora_criacao')
     
     if conteudo:
         usuario_id = session.get('usuario_id')
@@ -282,11 +316,28 @@ def adicionar_tarefa():
                 flash('Formato de data inválido. Use YYYY-MM-DD', 'erro')
                 return redirect(url_for('index'))
         
+        # Definir a data e hora de criação - usar a hora especificada pelo usuário ou a atual
+        data_criacao = datetime.now()
+        if hora_criacao_str and hora_criacao_str != '':
+            try:
+                # Separar a hora e minuto da string HH:MM
+                hora, minuto = map(int, hora_criacao_str.split(':'))
+                # Criar um novo datetime com a data atual e a hora especificada
+                data_criacao = datetime.now().replace(hour=hora, minute=minuto, second=0, microsecond=0)
+            except ValueError:
+                flash('Formato de hora inválido. Use HH:MM (24h)', 'erro')
+                return redirect(url_for('index'))
+        
+        # Obter notas (opcional)
+        notas = request.form.get('notas')
+        
         # Criar a tarefa com os dados fornecidos
         nova_tarefa = Tarefa(
             conteudo=conteudo, 
             usuario_id=usuario_id,
-            data_vencimento=data_vencimento
+            data_vencimento=data_vencimento,
+            data_criacao=data_criacao,  # Usar a data/hora definida
+            notas=notas
         )
         
         if categoria_id and categoria_id != '':
@@ -566,5 +617,197 @@ def api_notificacoes_contagem():
     
     return jsonify({'nao_lidas': contagem})
 
+@app.route('/tarefa/<int:tarefa_id>/detalhes', methods=['GET'])
+@login_obrigatorio
+def detalhes_tarefa(tarefa_id):
+    """Exibe os detalhes da tarefa, incluindo notas e anexos."""
+    usuario_id = session.get('usuario_id')
+    
+    # Verificar se a tarefa pertence ao usuário ou foi compartilhada com ele
+    tarefa = Tarefa.query.filter_by(id=tarefa_id).first_or_404()
+    
+    # Verificar se o usuário tem acesso à tarefa
+    if tarefa.usuario_id != usuario_id:
+        compartilhamento = TarefaCompartilhada.query.filter_by(
+            tarefa_id=tarefa_id, 
+            usuario_compartilhado_id=usuario_id
+        ).first()
+        
+        if not compartilhamento:
+            flash('Você não tem permissão para acessar esta tarefa', 'erro')
+            return redirect(url_for('index'))
+    
+    # Obter os anexos da tarefa
+    anexos = Anexo.query.filter_by(tarefa_id=tarefa_id).all()
+    
+    return render_template('detalhes_tarefa.html', 
+                          tarefa=tarefa, 
+                          anexos=anexos)
+
+@app.route('/tarefa/<int:tarefa_id>/atualizar_notas', methods=['POST'])
+@login_obrigatorio
+def atualizar_notas(tarefa_id):
+    """Atualiza as notas de uma tarefa."""
+    usuario_id = session.get('usuario_id')
+    tarefa = Tarefa.query.filter_by(id=tarefa_id).first_or_404()
+    
+    # Verificar permissões
+    if tarefa.usuario_id != usuario_id:
+        compartilhamento = TarefaCompartilhada.query.filter_by(
+            tarefa_id=tarefa_id, 
+            usuario_compartilhado_id=usuario_id,
+            permissao_edicao=True
+        ).first()
+        
+        if not compartilhamento:
+            flash('Você não tem permissão para editar esta tarefa', 'erro')
+            return redirect(url_for('detalhes_tarefa', tarefa_id=tarefa_id))
+    
+    # Atualizar notas
+    notas = request.form.get('notas')
+    tarefa.notas = notas
+    db.session.commit()
+    
+    flash('Notas atualizadas com sucesso', 'sucesso')
+    return redirect(url_for('detalhes_tarefa', tarefa_id=tarefa_id))
+
+@app.route('/tarefa/<int:tarefa_id>/adicionar_anexo', methods=['POST'])
+@login_obrigatorio
+def adicionar_anexo(tarefa_id):
+    """Adiciona um anexo a uma tarefa."""
+    usuario_id = session.get('usuario_id')
+    tarefa = Tarefa.query.filter_by(id=tarefa_id).first_or_404()
+    
+    # Verificar permissões
+    if tarefa.usuario_id != usuario_id:
+        compartilhamento = TarefaCompartilhada.query.filter_by(
+            tarefa_id=tarefa_id, 
+            usuario_compartilhado_id=usuario_id,
+            permissao_edicao=True
+        ).first()
+        
+        if not compartilhamento:
+            flash('Você não tem permissão para adicionar anexos a esta tarefa', 'erro')
+            return redirect(url_for('detalhes_tarefa', tarefa_id=tarefa_id))
+    
+    # Verificar se o arquivo foi enviado
+    if 'arquivo' not in request.files:
+        flash('Nenhum arquivo selecionado', 'erro')
+        return redirect(url_for('detalhes_tarefa', tarefa_id=tarefa_id))
+    
+    arquivo = request.files['arquivo']
+    
+    # Se o usuário não selecionar um arquivo
+    if arquivo.filename == '':
+        flash('Nenhum arquivo selecionado', 'erro')
+        return redirect(url_for('detalhes_tarefa', tarefa_id=tarefa_id))
+    
+    # Se o arquivo é válido e permitido
+    if arquivo and allowed_file(arquivo.filename):
+        # Garantir nome de arquivo seguro
+        filename = secure_filename(arquivo.filename)
+        
+        # Criar pasta específica para a tarefa, se não existir
+        tarefa_upload_dir = os.path.join(app.config['UPLOAD_FOLDER'], f'tarefa_{tarefa_id}')
+        os.makedirs(tarefa_upload_dir, exist_ok=True)
+        
+        # Acrescentar timestamp ao nome do arquivo para evitar duplicatas
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        filename_with_timestamp = f"{timestamp}_{filename}"
+        
+        # Caminho completo para salvar o arquivo
+        filepath = os.path.join(tarefa_upload_dir, filename_with_timestamp)
+        
+        # Salvar o arquivo
+        arquivo.save(filepath)
+        
+        # Criar registro no banco de dados
+        novo_anexo = Anexo(
+            nome_arquivo=filename,
+            caminho_arquivo=os.path.join(f'tarefa_{tarefa_id}', filename_with_timestamp),
+            tipo_arquivo=arquivo.content_type,
+            tamanho=os.path.getsize(filepath),
+            tarefa_id=tarefa_id,
+            usuario_id=usuario_id
+        )
+        
+        db.session.add(novo_anexo)
+        db.session.commit()
+        
+        flash('Arquivo anexado com sucesso', 'sucesso')
+    else:
+        flash(f'Tipo de arquivo não permitido. Formatos aceitos: {", ".join(ALLOWED_EXTENSIONS)}', 'erro')
+    
+    return redirect(url_for('detalhes_tarefa', tarefa_id=tarefa_id))
+
+@app.route('/anexo/<int:anexo_id>/download')
+@login_obrigatorio
+def download_anexo(anexo_id):
+    """Faz o download de um anexo."""
+    usuario_id = session.get('usuario_id')
+    
+    # Obter o anexo
+    anexo = Anexo.query.filter_by(id=anexo_id).first_or_404()
+    
+    # Verificar a permissão (usuário dono da tarefa ou com tarefa compartilhada)
+    tarefa = Tarefa.query.filter_by(id=anexo.tarefa_id).first()
+    
+    if tarefa.usuario_id != usuario_id:
+        compartilhamento = TarefaCompartilhada.query.filter_by(
+            tarefa_id=anexo.tarefa_id, 
+            usuario_compartilhado_id=usuario_id
+        ).first()
+        
+        if not compartilhamento:
+            flash('Você não tem permissão para baixar este anexo', 'erro')
+            return redirect(url_for('index'))
+    
+    # Caminho completo para o arquivo
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], anexo.caminho_arquivo)
+    
+    try:
+        return send_from_directory(
+            directory=app.config['UPLOAD_FOLDER'], 
+            path=anexo.caminho_arquivo, 
+            as_attachment=True,
+            download_name=anexo.nome_arquivo
+        )
+    except FileNotFoundError:
+        flash('Arquivo não encontrado', 'erro')
+        return redirect(url_for('detalhes_tarefa', tarefa_id=anexo.tarefa_id))
+
+@app.route('/anexo/<int:anexo_id>/excluir', methods=['POST'])
+@login_obrigatorio
+def excluir_anexo(anexo_id):
+    """Exclui um anexo da tarefa."""
+    usuario_id = session.get('usuario_id')
+    
+    # Obter o anexo
+    anexo = Anexo.query.filter_by(id=anexo_id).first_or_404()
+    tarefa_id = anexo.tarefa_id
+    
+    # Verificar permissão (apenas o proprietário da tarefa ou do anexo pode excluir)
+    tarefa = Tarefa.query.filter_by(id=tarefa_id).first()
+    
+    if tarefa.usuario_id != usuario_id and anexo.usuario_id != usuario_id:
+        flash('Você não tem permissão para excluir este anexo', 'erro')
+        return redirect(url_for('detalhes_tarefa', tarefa_id=tarefa_id))
+    
+    # Excluir o arquivo físico
+    try:
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], anexo.caminho_arquivo)
+        if os.path.exists(filepath):
+            os.remove(filepath)
+    except Exception as e:
+        print(f"Erro ao excluir arquivo: {str(e)}")
+    
+    # Excluir registro do anexo do banco de dados
+    db.session.delete(anexo)
+    db.session.commit()
+    
+    flash('Anexo excluído com sucesso', 'sucesso')
+    return redirect(url_for('detalhes_tarefa', tarefa_id=tarefa_id))
+
 if __name__ == '__main__':
-    app.run(debug=True, port=5003)
+    port = int(os.environ.get('PORT', 5003))
+    app.run(debug=True, port=port, host='0.0.0.0')

@@ -169,6 +169,13 @@ function setupNotificationSystem() {
     const closeNotifications = document.getElementById('closeNotifications');
     const notificationList = document.getElementById('notificationList');
     
+    // Verifica se estamos na página que possui os elementos de notificação
+    // Se não encontrarmos os elementos necessários, saímos da função
+    if (!notificationBell || !notificationCount || !notificationsArea) {
+        console.log('Elementos de notificação não encontrados na página atual');
+        return;
+    }
+    
     // Variável para armazenar as notificações
     let notifications = [];
     
@@ -185,9 +192,11 @@ function setupNotificationSystem() {
     });
     
     // Fecha o painel de notificações
-    closeNotifications.addEventListener('click', function() {
-        notificationsArea.classList.remove('show');
-    });
+    if (closeNotifications) {
+        closeNotifications.addEventListener('click', function() {
+            notificationsArea.classList.remove('show');
+        });
+    }
     
     // Clique fora da área de notificações fecha o painel
     document.addEventListener('click', function(event) {
@@ -258,18 +267,23 @@ function setupNotificationSystem() {
         renderNotifications();
         
         // Adiciona classe especial se houver notificações
-        if (count > 0) {
+        if (count > 0 && notificationBell) {
             notificationBell.classList.add('has-new');
         }
     }
     
     // Atualiza o contador de notificações
     function updateNotificationCount(count) {
-        notificationCount.textContent = count > 0 ? count : '';
+        if (notificationCount) {
+            notificationCount.textContent = count > 0 ? count : '';
+        }
     }
     
     // Renderiza as notificações na área de notificações
     function renderNotifications() {
+        // Verifica se o elemento existe
+        if (!notificationList) return;
+        
         // Limpa a lista de notificações
         notificationList.innerHTML = '';
         

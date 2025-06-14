@@ -1,0 +1,525 @@
+/* TaskPro - Estilos para Anexos e Notas */
+
+/* Estilos para os indicadores de notas e anexos nas tarefas */
+.task-indicators {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.notes-indicator, 
+.attachments-indicator {
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 7px;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+.notes-indicator {
+    background-color: rgba(123, 104, 238, 0.15);
+    color: var(--primary-dark);
+}
+
+.attachments-indicator {
+    background-color: rgba(255, 105, 180, 0.15);
+    color: var(--secondary-dark);
+}
+
+.notes-indicator:hover, 
+.attachments-indicator:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.notes-indicator:hover {
+    background-color: rgba(123, 104, 238, 0.25);
+}
+
+.attachments-indicator:hover {
+    background-color: rgba(255, 105, 180, 0.25);
+}
+
+/* Tooltips for indicators */
+.notes-indicator::after,
+.attachments-indicator::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.notes-indicator:hover::after,
+.attachments-indicator:hover::after {
+    opacity: 1;
+    visibility: visible;
+    bottom: 130%;
+}
+
+/* Botão de detalhes na lista de tarefas */
+.btn-details {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--text-light);
+    text-decoration: none;
+    margin-right: 6px;
+    transition: var(--transition);
+}
+
+.btn-details:hover {
+    background-color: var(--primary-lighter);
+    color: white;
+}
+
+.details-icon {
+    font-size: 16px;
+}
+
+/* Página de detalhes da tarefa */
+.task-details-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 25px;
+    margin-bottom: 30px;
+    border-left: 5px solid var(--primary-color);
+    position: relative;
+}
+
+.task-details-card.proxima {
+    border-left-color: var(--warning-color);
+}
+
+.task-details-card.vencida {
+    border-left-color: var(--error-color);
+}
+
+.task-details-card.completed {
+    border-left-color: var(--success-color);
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.task-title {
+    margin: 0;
+    color: var(--text-dark);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.4;
+    flex: 1;
+}
+
+.task-status-badge {
+    margin-left: 15px;
+}
+
+.status {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.status.completed {
+    background-color: rgba(76, 175, 80, 0.15);
+    color: var(--success-color);
+}
+
+.status.pending {
+    background-color: rgba(123, 104, 238, 0.15);
+    color: var(--primary-color);
+}
+
+.task-info {
+    margin-bottom: 20px;
+}
+
+.info-item {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--text-medium);
+    width: 100px;
+}
+
+.info-value {
+    color: var(--text-dark);
+}
+
+.due-date.proxima {
+    color: var(--warning-color);
+    font-weight: 600;
+}
+
+.due-date.vencida {
+    color: var(--error-color);
+    font-weight: 600;
+}
+
+.task-actions-bar {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: var(--button-radius);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.share-btn {
+    background-color: var(--secondary-light);
+    color: white;
+}
+
+.share-btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.toggle-btn {
+    background-color: var(--primary-light);
+    color: white;
+}
+
+.toggle-btn:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.btn-icon {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.toggle-form {
+    margin: 0;
+}
+
+/* Seção de notas */
+.notes-section {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+    border-left: 4px solid var(--primary-color);
+}
+
+.notes-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, transparent 70%, rgba(123, 104, 238, 0.1) 100%);
+    border-radius: 0 0 0 100px;
+    pointer-events: none;
+}
+
+.notes-form {
+    width: 100%;
+    position: relative;
+}
+
+.notes-textarea {
+    width: 100%;
+    padding: 18px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--input-radius);
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-dark);
+    resize: vertical;
+    min-height: 180px;
+    transition: var(--transition);
+    margin-bottom: 20px;
+    background-color: rgba(250, 250, 255, 0.5);
+    background-image: linear-gradient(to bottom, rgba(123, 104, 238, 0.03) 1px, transparent 1px);
+    background-size: 100% 28px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.notes-textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(123, 104, 238, 0.15);
+    background-color: white;
+}
+
+.save-notes-btn {
+    background: var(--gradient);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: var(--button-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+}
+
+.save-notes-btn::before {
+    content: "📋";
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.save-notes-btn:hover {
+    background: var(--gradient-hover);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+}
+
+.save-notes-btn:active {
+    transform: translateY(-1px);
+}
+
+/* Seção de anexos */
+.attachments-section {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
+}
+
+.attachments-list {
+    margin-bottom: 20px;
+}
+
+.no-attachments {
+    color: var(--text-light);
+    font-style: italic;
+    margin: 15px 0;
+}
+
+.attachment-card {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    background-color: rgba(123, 104, 238, 0.05);
+    margin-bottom: 10px;
+    transition: var(--transition);
+}
+
+.attachment-card:hover {
+    background-color: rgba(123, 104, 238, 0.1);
+    transform: translateX(5px);
+}
+
+.attachment-icon {
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.attachment-info {
+    flex: 1;
+}
+
+.attachment-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 3px;
+}
+
+.attachment-meta {
+    display: flex;
+    gap: 15px;
+    color: var(--text-medium);
+    font-size: 13px;
+}
+
+.attachment-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.attachment-download,
+.attachment-delete {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    transition: var(--transition);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--text-medium);
+}
+
+.attachment-download:hover {
+    background-color: rgba(76, 175, 80, 0.15);
+    color: var(--success-color);
+}
+
+.attachment-delete:hover {
+    background-color: rgba(244, 67, 54, 0.15);
+    color: var(--error-color);
+}
+
+.attachment-form {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.attachment-upload {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.upload-label {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: var(--button-radius);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.upload-label:hover {
+    background-color: var(--primary-dark);
+}
+
+.upload-icon {
+    margin-right: 8px;
+}
+
+.file-input {
+    display: none;
+}
+
+.selected-file-name {
+    margin-left: 15px;
+    color: var(--text-medium);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+}
+
+.file-selected {
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.upload-btn {
+    background: var(--gradient);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--button-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.upload-btn:hover {
+    background: var(--gradient-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.attachment-delete-form {
+    margin: 0;
+}
+
+/* Responsividade */
+@media screen and (max-width: 768px) {
+    .task-header {
+        flex-direction: column;
+    }
+    
+    .task-status-badge {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    
+    .task-actions-bar {
+        flex-direction: column;
+    }
+    
+    .action-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .info-label {
+        width: auto;
+        margin-bottom: 5px;
+    }
+    
+    .attachment-upload {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .selected-file-name {
+        margin-left: 0;
+        margin-top: 10px;
+        max-width: 100%;
+    }
+    
+    .upload-btn {
+        width: 100%;
+    }
+}

@@ -1,0 +1,122 @@
+/* TaskPro - Estilos para o formulário de notas na página inicial */
+
+/* Estilização avançada para o textarea de notas na página inicial */
+.notes-input-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+textarea.notes-input {
+    width: 100%;
+    padding: 18px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--input-radius);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-dark);
+    resize: vertical;
+    min-height: 120px;
+    transition: all 0.35s ease;
+    background-color: rgba(250, 250, 255, 0.6);
+    /* Efeito de linhas para área de texto */
+    background-image: linear-gradient(to bottom, rgba(123, 104, 238, 0.04) 1px, transparent 1px);
+    background-size: 100% 28px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+textarea.notes-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(123, 104, 238, 0.12);
+    background-color: white;
+    /* Borda gradiente quando em foco */
+    border-image: linear-gradient(to right, var(--primary-color), var(--secondary-color)) 1;
+}
+
+/* Label flutuante para o textarea */
+.notes-label {
+    position: absolute;
+    left: 15px;
+    top: 20px;
+    font-size: 14px;
+    color: var(--text-medium);
+    pointer-events: none;
+    transition: all 0.25s ease;
+    padding: 0 5px;
+    background-color: transparent;
+}
+
+textarea.notes-input:focus + .notes-label,
+textarea.notes-input:not(:placeholder-shown) + .notes-label {
+    top: -12px;
+    left: 12px;
+    font-size: 12px;
+    color: var(--primary-color);
+    background-color: white;
+    padding: 0 5px;
+    font-weight: 600;
+}
+
+/* Contador de caracteres */
+.notes-char-counter {
+    position: absolute;
+    right: 12px;
+    bottom: 10px;
+    font-size: 12px;
+    color: var(--text-medium);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 2px 8px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.notes-char-counter.limit {
+    color: var(--error-color);
+}
+
+/* Efeito decorativo para o campo de notas */
+.notes-input-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, transparent 65%, rgba(123, 104, 238, 0.12) 100%);
+    border-radius: 0 0 0 80px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.notes-input-container::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(315deg, rgba(255, 105, 180, 0.08) 30%, transparent 100%);
+    border-radius: 0 60px 0 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Placeholder personalizado */
+textarea.notes-input::placeholder {
+    color: rgba(102, 102, 102, 0.6);
+    font-style: italic;
+}
+
+/* Responsividade para telas pequenas */
+@media screen and (max-width: 768px) {
+    textarea.notes-input {
+        padding: 15px;
+        min-height: 100px;
+    }
+    
+    .notes-char-counter {
+        bottom: 5px;
+        right: 5px;
+    }
+}
