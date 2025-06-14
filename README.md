@@ -6,6 +6,8 @@ Um aplicativo web profissional e moderno para gerenciar suas tarefas diárias co
 
 TaskPro é uma aplicação web para gerenciamento de tarefas desenvolvida com Python/Flask no backend e HTML/CSS/JavaScript no frontend. A aplicação permite que usuários criem uma conta pessoal, adicionem tarefas, organizem por categorias, definam prazos e acompanhem seu progresso de forma eficiente.
 
+https://github.com/user-attachments/assets/538f6cc1-e12b-4054-bd5d-330cdc131e9c
+
 ## ✨ Funcionalidades
 
 ### Sistema de Usuários
