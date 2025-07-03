@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Script para criar e popular o banco de dados com dados iniciais
 """
@@ -6,13 +7,11 @@ import shutil
 from datetime import datetime, date, timedelta
 
 # Adicionar o diretório raiz ao path para importações
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_dir)
 
 from app import create_app, db
-from app.models.usuario import Usuario
-from app.models.categoria import Categoria
-from app.models.tarefa import Tarefa
-from app.models.anexo import Anexo
+from app.models import Usuario, Categoria, Tarefa, Anexo, TarefaCompartilhada, Notificacao
 
 def criar_bd():
     """Cria o banco de dados e popula com dados iniciais"""
@@ -29,6 +28,12 @@ def criar_bd():
         usuario_teste = Usuario(nome="Usuário Teste", email="teste@exemplo.com")
         usuario_teste.set_senha("123456")
         db.session.add(usuario_teste)
+        
+        # Criar um segundo usuário para testar compartilhamento
+        usuario_teste2 = Usuario(nome="Outro Usuário", email="outro@exemplo.com")
+        usuario_teste2.set_senha("123456")
+        db.session.add(usuario_teste2)
+        
         db.session.commit()
         
         # Cria categorias de exemplo
@@ -88,9 +93,33 @@ def criar_bd():
         db.session.add_all(tarefas)
         db.session.commit()
         
+        # Criar uma tarefa compartilhada
+        tarefa_compartilhada = TarefaCompartilhada(
+            tarefa_id=tarefas[3].id,  # "Planejar próximo trimestre"
+            proprietario_id=usuario_teste.id,
+            usuario_compartilhado_id=usuario_teste2.id,
+            permissao_edicao=True
+        )
+        db.session.add(tarefa_compartilhada)
+        
+        # Criar uma notificação
+        notificacao = Notificacao(
+            usuario_id=usuario_teste2.id,
+            tipo='compartilhamento',
+            conteudo=f"Usuário Teste compartilhou uma tarefa com você: '{tarefas[3].conteudo}'",
+            referencia_id=tarefas[3].id
+        )
+        db.session.add(notificacao)
+        
+        db.session.commit()
+        
         print("Banco de dados criado com sucesso!")
-        print("Usuário de teste criado: teste@exemplo.com")
-        print("Senha: 123456")
+        print("Usuário de teste criado:")
+        print("- Email: teste@exemplo.com")
+        print("- Senha: 123456")
+        print("Segundo usuário criado para testar compartilhamento:")
+        print("- Email: outro@exemplo.com")
+        print("- Senha: 123456")
 
 if __name__ == "__main__":
     criar_bd()

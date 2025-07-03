@@ -1,18 +1,6 @@
-#!/usr/bin/env python
-"""
-Script para criar e popular o banco de dados com dados iniciais
-"""
-import os, sys
-import shutil
+from app import app, db, Usuario, Tarefa, Categoria, Anexo
+import os, shutil
 from datetime import datetime, date, timedelta
-
-# Adicionar o diretório raiz ao path para importações
-sys.path.append(os.path.abspath(os.path.dirname(__file__)))
-
-from app import create_app, db
-from app.models import Usuario, Categoria, Tarefa, Anexo
-
-app = create_app('development')
 
 # Criar o banco de dados com as tabelas corretas
 with app.app_context():
@@ -21,7 +9,6 @@ with app.app_context():
     db.create_all()
     
     # Cria um usuário de teste
-    print("Criando usuário de teste...")
     usuario_teste = Usuario(nome="Usuário Teste", email="teste@exemplo.com")
     usuario_teste.set_senha("123456")
     db.session.add(usuario_teste)
