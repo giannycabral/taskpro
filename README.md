@@ -57,9 +57,8 @@ https://github.com/user-attachments/assets/538f6cc1-e12b-4054-bd5d-330cdc131e9c
 ```
 taskpro/
 │
-├── app.py                 # Arquivo legado (será removido na próxima fase)
+├── app.py.old             # Arquivo legado (será removido na próxima fase)
 ├── config.py              # Configurações da aplicação
-├── criar_bd.py            # Script para criação do banco de dados
 ├── run.py                 # Script para executar a aplicação
 ├── run.sh                 # Script para execução fácil da aplicação
 ├── requirements.txt       # Dependências do projeto
@@ -141,7 +140,7 @@ pip install -r requirements.txt
 
 3. **Crie o banco de dados**
 ```bash
-python criar_bd.py
+python scripts/criar_bd.py
 ```
 
 4. **Execute a aplicação**
@@ -199,6 +198,35 @@ Para fazer login com o usuário de teste criado automaticamente:
    - Use os controles de filtro para ver apenas tarefas concluídas ou pendentes
    - Ordene tarefas por data de criação ou vencimento
 
+## 📁 Sistema de Uploads e Anexos
+
+O TaskPro possui um sistema completo para gerenciar anexos de arquivos nas tarefas:
+
+### Diretório de Uploads
+- O diretório `app/uploads/` armazena todos os arquivos anexados às tarefas
+- Este diretório é criado automaticamente quando a aplicação é iniciada pela primeira vez
+- Os arquivos são organizados de forma segura e mantêm seus nomes originais
+- O sistema aceita diversos tipos de arquivos: documentos, imagens, PDFs, planilhas, apresentações e arquivos zip
+
+### Tipos de arquivos permitidos
+- Documentos: `.txt`, `.doc`, `.docx`
+- Imagens: `.png`, `.jpg`, `.jpeg`, `.gif`
+- PDFs: `.pdf`
+- Planilhas: `.xls`, `.xlsx`
+- Apresentações: `.ppt`, `.pptx`
+- Arquivos compactados: `.zip`
+
+### Limites e segurança
+- O tamanho máximo de arquivo é de 16MB para evitar sobrecarga do servidor
+- O sistema implementa validações de segurança para evitar uploads maliciosos
+- Os anexos são vinculados à tarefa e ao usuário, garantindo que apenas pessoas autorizadas possam acessá-los
+
+### Como funciona
+1. Ao adicionar uma tarefa ou editar seus detalhes, o usuário pode anexar arquivos
+2. Os arquivos são automaticamente processados, validados e armazenados no servidor
+3. Os anexos podem ser visualizados, baixados ou excluídos na página de detalhes da tarefa
+4. Quando uma tarefa é excluída, seus anexos são automaticamente removidos do sistema
+
 ## 🤝 Contribuição
 
 Contribuições são bem-vindas! Se você deseja melhorar este projeto, siga estes passos:
@@ -212,42 +240,6 @@ Contribuições são bem-vindas! Se você deseja melhorar este projeto, siga est
 ## 📝 Licença
 
 Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para detalhes.
-
-## 📅 Cronograma de Refatoração (✅ CONCLUÍDO)
-
-A refatoração da estrutura do projeto foi concluída com sucesso, seguindo o cronograma abaixo:
-
-1. **Dia 1**: ✅ Configuração da estrutura de diretórios e criação de arquivos base
-   - Criada nova estrutura de pastas (app/models, app/routes, app/utils, etc.)
-   - Configurados arquivos de inicialização (app/__init__.py, config.py, run.py)
-   - Preparados módulos base e configurações iniciais
-
-2. **Dia 2-3**: ✅ Refatoração dos modelos
-   - Separado cada modelo em seu próprio arquivo (Usuario, Tarefa, Categoria, etc.)
-   - Reorganizados relacionamentos entre modelos
-   - Configuradas importações corretas e relacionamentos
-
-3. **Dia 4-6**: ✅ Refatoração das rotas e implementação dos blueprints
-   - Separadas rotas por funcionalidade (auth, tarefas, categorias, etc.)
-   - Implementado sistema de blueprints
-   - Ajustados redirecionamentos entre rotas
-
-4. **Dia 7**: ✅ Ajuste de referências e imports entre arquivos
-   - Corrigidas dependências circulares nos modelos (usando strings para referenciar relacionamentos)
-   - Otimizados imports (agrupados por tipo e relevância)
-   - Adicionada melhor documentação com docstrings
-   - Refatorado o registro de blueprints usando lista centralizada
-   - Implementada melhor organização de imports nas rotas e modelos
-
-5. **Dia 8-9**: ✅ Testes e correção de bugs
-   - Testados componentes individuais
-   - Testados fluxos completos da aplicação
-   - Corrigidos problemas identificados
-
-6. **Dia 10**: ✅ Validação final e limpeza de código
-   - Verificado funcionamento completo da aplicação
-   - Removido código obsoleto
-   - Documentada a nova estrutura
 
 ## 🔮 Próximos Passos
 
