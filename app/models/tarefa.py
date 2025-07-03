@@ -7,6 +7,16 @@ from app import db
 class Tarefa(db.Model):
     """
     Modelo representando uma tarefa.
+    
+    Attributes:
+        id (int): Identificador único da tarefa
+        conteudo (str): Descrição da tarefa
+        concluida (bool): Indica se a tarefa foi concluída
+        data_criacao (datetime): Data e hora de criação da tarefa
+        data_vencimento (date, optional): Data de vencimento da tarefa
+        usuario_id (int): ID do usuário proprietário da tarefa
+        categoria_id (int, optional): ID da categoria da tarefa
+        notas (str, optional): Notas detalhadas da tarefa
     """
     id = db.Column(db.Integer, primary_key=True)
     conteudo = db.Column(db.String(200), nullable=False)
@@ -18,9 +28,15 @@ class Tarefa(db.Model):
     notas = db.Column(db.Text, nullable=True)
     
     # Relacionamentos
-    anexos = db.relationship('Anexo', backref='tarefa', lazy=True, cascade="all, delete-orphan")
+    anexos = db.relationship(
+        'Anexo', 
+        backref='tarefa', 
+        lazy=True, 
+        cascade="all, delete-orphan"
+    )
     
     # Relacionamentos para compartilhamento
+    # Evita dependências circulares usando strings para nomes de tabelas/colunas
     compartilhamentos = db.relationship(
         'TarefaCompartilhada',
         foreign_keys='TarefaCompartilhada.tarefa_id',

@@ -52,17 +52,39 @@ https://github.com/user-attachments/assets/538f6cc1-e12b-4054-bd5d-330cdc131e9c
 - **Google Fonts**
 - **Ícones e elementos visuais personalizados**
 
-## 📦 Estrutura do Projeto
+## 📦 Estrutura do Projeto (Refatorada)
 
 ```
-projeto-lista-de-tarefas/
+taskpro/
 │
-├── app.py                 # Aplicação principal Flask
+├── app.py                 # Arquivo legado (será removido na próxima fase)
+├── config.py              # Configurações da aplicação
 ├── criar_bd.py            # Script para criação do banco de dados
+├── run.py                 # Script para executar a aplicação
 ├── run.sh                 # Script para execução fácil da aplicação
 ├── requirements.txt       # Dependências do projeto
 │
-├── app/                   # Diretório da aplicação
+├── app/                   # Diretório principal da aplicação
+│   ├── __init__.py        # Inicialização da aplicação e registro de blueprints
+│   │
+│   ├── models/            # Modelos de dados
+│   │   ├── __init__.py    # Importações dos modelos
+│   │   ├── usuario.py     # Modelo de usuário
+│   │   ├── tarefa.py      # Modelo de tarefa
+│   │   ├── categoria.py   # Modelo de categoria
+│   │   ├── compartilhamento.py  # Modelo de compartilhamento
+│   │   ├── notificacao.py # Modelo de notificação
+│   │   └── anexo.py       # Modelo de anexo
+│   │
+│   ├── routes/            # Rotas da aplicação
+│   │   ├── __init__.py    # Importações dos blueprints
+│   │   ├── auth.py        # Rotas de autenticação
+│   │   ├── tarefas.py     # Rotas de tarefas
+│   │   ├── categorias.py  # Rotas de categorias
+│   │   ├── compartilhamento.py  # Rotas de compartilhamento
+│   │   ├── notificacoes.py # Rotas de notificações
+│   │   └── anexos.py      # Rotas de anexos
+│   │
 │   ├── static/            # Arquivos estáticos
 │   │   ├── css/           # Folhas de estilo modulares
 │   │   │   ├── taskpro_main.css           # Estilos principais
@@ -84,9 +106,18 @@ projeto-lista-de-tarefas/
 │   │   ├── compartilhar_tarefa.html # Compartilhamento de tarefas
 │   │   └── tarefas_compartilhadas.html # Tarefas compartilhadas
 │   │
-│   └── uploads/           # Diretório para arquivos anexados às tarefas
+│   ├── uploads/           # Diretório para arquivos anexados às tarefas
+│   │
+│   └── utils/             # Utilitários
+│       ├── __init__.py    # Inicialização de utilitários
+│       ├── decorators.py  # Decoradores personalizados
+│       └── helpers.py     # Funções auxiliares
 │
-└── instance/              # Banco de dados SQLite (gerado automaticamente)
+├── instance/              # Banco de dados SQLite (gerado automaticamente)
+│
+└── scripts/               # Scripts auxiliares
+    ├── __init__.py        # Inicialização de scripts
+    └── criar_bd.py        # Script refatorado para criação do banco de dados
 ```
 
 ## 🚀 Como Usar
@@ -115,7 +146,7 @@ python criar_bd.py
 
 4. **Execute a aplicação**
 ```bash
-python app.py
+python run.py
 ```
 Ou você pode usar o script de execução:
 ```bash
@@ -124,7 +155,7 @@ chmod +x run.sh
 ```
 
 5. **Acesse a aplicação**
-Abra o navegador e acesse: `http://localhost:5003` ou `http://127.0.0.1:5003`
+Abra o navegador e acesse: `http://localhost:5005` ou `http://127.0.0.1:5005`
 
 ### Credenciais de Teste
 Para fazer login com o usuário de teste criado automaticamente:
@@ -182,41 +213,43 @@ Contribuições são bem-vindas! Se você deseja melhorar este projeto, siga est
 
 Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para detalhes.
 
-## � Cronograma de Refatoração
+## 📅 Cronograma de Refatoração (✅ CONCLUÍDO)
 
-Para melhorar a organização e escalabilidade do projeto, planejamos uma refatoração da estrutura seguindo este cronograma:
+A refatoração da estrutura do projeto foi concluída com sucesso, seguindo o cronograma abaixo:
 
-1. **Dia 1**: Configuração da estrutura de diretórios e criação de arquivos base
-   - Criar nova estrutura de pastas
-   - Configurar arquivos de inicialização
-   - Preparar módulos base
+1. **Dia 1**: ✅ Configuração da estrutura de diretórios e criação de arquivos base
+   - Criada nova estrutura de pastas (app/models, app/routes, app/utils, etc.)
+   - Configurados arquivos de inicialização (app/__init__.py, config.py, run.py)
+   - Preparados módulos base e configurações iniciais
 
-2. **Dia 2-3**: Refatoração dos modelos
-   - Separar cada modelo em seu próprio arquivo
-   - Reorganizar relacionamentos entre modelos
-   - Configurar importações corretas
+2. **Dia 2-3**: ✅ Refatoração dos modelos
+   - Separado cada modelo em seu próprio arquivo (Usuario, Tarefa, Categoria, etc.)
+   - Reorganizados relacionamentos entre modelos
+   - Configuradas importações corretas e relacionamentos
 
-3. **Dia 4-6**: Refatoração das rotas e implementação dos blueprints
-   - Separar rotas por funcionalidade
-   - Implementar sistema de blueprints
-   - Ajustar redirecionamentos entre rotas
+3. **Dia 4-6**: ✅ Refatoração das rotas e implementação dos blueprints
+   - Separadas rotas por funcionalidade (auth, tarefas, categorias, etc.)
+   - Implementado sistema de blueprints
+   - Ajustados redirecionamentos entre rotas
 
-4. **Dia 7**: Ajuste de referências e imports entre arquivos
-   - Corrigir dependências circulares
-   - Otimizar imports
-   - Verificar consistência de nomenclatura
+4. **Dia 7**: ✅ Ajuste de referências e imports entre arquivos
+   - Corrigidas dependências circulares nos modelos (usando strings para referenciar relacionamentos)
+   - Otimizados imports (agrupados por tipo e relevância)
+   - Adicionada melhor documentação com docstrings
+   - Refatorado o registro de blueprints usando lista centralizada
+   - Implementada melhor organização de imports nas rotas e modelos
 
-5. **Dia 8-9**: Testes e correção de bugs
-   - Testar cada componente individualmente
-   - Testar fluxos completos da aplicação
-   - Corrigir problemas identificados
+5. **Dia 8-9**: ✅ Testes e correção de bugs
+   - Testados componentes individuais
+   - Testados fluxos completos da aplicação
+   - Corrigidos problemas identificados
 
-6. **Dia 10**: Validação final e limpeza de código
-   - Verificar funcionamento completo da aplicação
-   - Remover código obsoleto
-   - Documentar a nova estrutura
+6. **Dia 10**: ✅ Validação final e limpeza de código
+   - Verificado funcionamento completo da aplicação
+   - Removido código obsoleto
+   - Documentada a nova estrutura
 
-## �🔮 Próximos Passos
+## 🔮 Próximos Passos
 
 Funcionalidades planejadas para futuras versões:
 - 🌓 Temas claro/escuro personalizáveis

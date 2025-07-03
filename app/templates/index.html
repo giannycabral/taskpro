@@ -29,11 +29,11 @@
                     <span class="bell-icon">🔔</span>
                     <span class="notification-count" id="notificationCount">0</span>
                 </div>
-                <a href="{{ url_for('tarefas_compartilhadas') }}" class="btn-shared-tasks">
+                <a href="{{ url_for('compartilhamento.tarefas_compartilhadas') }}" class="btn-shared-tasks">
                     <span class="shared-tasks-icon">👥</span>
                     <span class="shared-count">{{ contagem_compartilhadas }}</span>
                 </a>
-                <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+                <a href="{{ url_for('auth.logout') }}" class="btn-logout">Sair</a>
             </div>
         </div>
         
@@ -59,7 +59,7 @@
         {% endwith %}
 
         <div class="section-title">Adicionar nova tarefa</div>
-        <form action="{{ url_for('adicionar_tarefa') }}" method="POST">
+        <form action="{{ url_for('tarefas.adicionar_tarefa') }}" method="POST">
             <div class="form-group">
                 <input type="text" name="tarefa" placeholder="Digite sua tarefa..." required>
             </div>
@@ -88,7 +88,7 @@
         </form>
 
         <div class="section-title">Nova categoria</div>
-        <form action="{{ url_for('adicionar_categoria') }}" method="POST">
+        <form action="{{ url_for('categorias.adicionar_categoria') }}" method="POST">
             <div class="form-group">
                 <input type="text" name="nome_categoria" placeholder="Nome da categoria" required>
             </div>
@@ -97,7 +97,7 @@
 
         <div class="section-title">Filtros e Ordenação</div>
         <div class="filters">
-            <form method="GET" action="{{ url_for('index') }}">
+            <form method="GET" action="{{ url_for('tarefas.index') }}">
                 <div class="filter-group">
                     <span class="filter-label">Status:</span>
                     <select name="status" class="filter-select" onchange="this.form.submit()">
@@ -148,10 +148,10 @@
                                         {% endif %}
                                     </div>
                                     <div class="task-actions">
-                                        <a href="{{ url_for('detalhes_tarefa', tarefa_id=tarefa.id) }}" class="btn-details" title="Ver detalhes da tarefa">
+                                        <a href="{{ url_for('tarefas.detalhes_tarefa', tarefa_id=tarefa.id) }}" class="btn-details" title="Ver detalhes da tarefa">
                                             <span class="details-icon">🔍</span>
                                         </a>
-                                        <a href="{{ url_for('compartilhar_tarefa', tarefa_id=tarefa.id) }}" class="btn-share" title="Compartilhar Tarefa">
+                                        <a href="{{ url_for('compartilhamento.compartilhar_tarefa', tarefa_id=tarefa.id) }}" class="btn-share" title="Compartilhar Tarefa">
                                             <span class="share-icon">👥</span>
                                         </a>
                                         <span class="close">×</span>
@@ -189,10 +189,10 @@
                                     {% endif %}
                                 </div>
                                 <div class="task-actions">
-                                    <a href="{{ url_for('detalhes_tarefa', tarefa_id=tarefa.id) }}" class="btn-details" title="Ver detalhes da tarefa">
+                                    <a href="{{ url_for('tarefas.detalhes_tarefa', tarefa_id=tarefa.id) }}" class="btn-details" title="Ver detalhes da tarefa">
                                         <span class="details-icon">🔍</span>
                                     </a>
-                                    <a href="{{ url_for('compartilhar_tarefa', tarefa_id=tarefa.id) }}" class="btn-share" title="Compartilhar Tarefa">
+                                    <a href="{{ url_for('compartilhamento.compartilhar_tarefa', tarefa_id=tarefa.id) }}" class="btn-share" title="Compartilhar Tarefa">
                                         <span class="share-icon">👥</span>
                                     </a>
                                     <span class="close">×</span>

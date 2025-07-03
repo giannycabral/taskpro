@@ -1,17 +1,36 @@
+"""
+Inicialização da aplicação TaskPro
+
+Este módulo inicializa a aplicação Flask, configurações, banco de dados
+e registra os blueprints.
+"""
+# Importações padrão
+import os
+
+# Importações de terceiros
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+
+# Importações do projeto
 from config import config
-import os
 
 # Instância do SQLAlchemy
 db = SQLAlchemy()
 
 def create_app(config_name='default'):
-    """Função factory para criar a aplicação Flask"""
+    """
+    Função factory para criar a aplicação Flask
+    
+    Args:
+        config_name (str): Nome da configuração a ser utilizada
+        
+    Returns:
+        Flask: Aplicação Flask configurada
+    """
     app = Flask(__name__, template_folder='templates', static_folder='static')
     app.config.from_object(config[config_name])
     
-    # Assegurar que o diretório de uploads existe
+    # Configuração de diretórios
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     
     # Inicializar extensões
@@ -23,18 +42,20 @@ def create_app(config_name='default'):
     
     # Registrar blueprints
     # Nota: Importamos aqui para evitar importações circulares
-    from app.routes.auth import auth_bp
-    from app.routes.tarefas import tarefas_bp
-    from app.routes.categorias import categorias_bp
-    from app.routes.compartilhamento import compartilhamento_bp
-    from app.routes.notificacoes import notificacoes_bp
-    from app.routes.anexos import anexos_bp
-    
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(tarefas_bp)
-    app.register_blueprint(categorias_bp)
-    app.register_blueprint(compartilhamento_bp)
-    app.register_blueprint(notificacoes_bp)
-    app.register_blueprint(anexos_bp)
+    register_blueprints(app)
     
     return app
+
+def register_blueprints(app):
+    """
+    Registra todos os blueprints da aplicação
+    
+    Args:
+        app (Flask): Instância da aplicação Flask
+    """
+    # Importar todos os blueprints de uma vez usando a lista centralizada
+    from app.routes import blueprints
+    
+    # Registrar cada blueprint na aplicação
+    for blueprint in blueprints:
+        app.register_blueprint(blueprint)

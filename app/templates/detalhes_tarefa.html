@@ -26,8 +26,8 @@
             
             <div class="user-info">
                 <span>Olá, {{ session.get('usuario_nome') }}!</span>
-                <a href="{{ url_for('index') }}" class="btn-back">Voltar ao Início</a>
-                <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+                <a href="{{ url_for('tarefas.index') }}" class="btn-back">Voltar ao Início</a>
+                <a href="{{ url_for('auth.logout') }}" class="btn-logout">Sair</a>
             </div>
         </div>
         
@@ -77,12 +77,12 @@
             </div>
             
             <div class="task-actions-bar">
-                <a href="{{ url_for('compartilhar_tarefa', tarefa_id=tarefa.id) }}" class="action-btn share-btn">
+                <a href="{{ url_for('compartilhamento.compartilhar_tarefa', tarefa_id=tarefa.id) }}" class="action-btn share-btn">
                     <span class="btn-icon">👥</span>
                     <span class="btn-text">Compartilhar</span>
                 </a>
                 
-                <form action="{{ url_for('marcar_concluida', tarefa_id=tarefa.id) }}" method="post" class="toggle-form" id="toggleTaskForm">
+                <form action="{{ url_for('tarefas.marcar_concluida', tarefa_id=tarefa.id) }}" method="post" class="toggle-form" id="toggleTaskForm">
                     <button type="submit" class="action-btn toggle-btn">
                         <span class="btn-icon">{% if tarefa.concluida %}↩️{% else %}✓{% endif %}</span>
                         <span class="btn-text">{% if tarefa.concluida %}Reabrir{% else %}Concluir{% endif %}</span>
@@ -93,7 +93,7 @@
 
         <div class="section-title">Notas</div>
         <div class="notes-section">
-            <form action="{{ url_for('atualizar_notas', tarefa_id=tarefa.id) }}" method="POST" class="notes-form">
+            <form action="{{ url_for('tarefas.editar_tarefa', tarefa_id=tarefa.id) }}" method="POST" class="notes-form">
                 <div class="notes-field-container">
                     <textarea name="notas" id="notesTextarea" rows="5" class="notes-textarea" placeholder=" " maxlength="2000">{{ tarefa.notas or '' }}</textarea>
                     <label for="notesTextarea" class="notes-label">Adicione notas detalhadas sobre esta tarefa</label>
@@ -132,10 +132,10 @@
                                 </div>
                             </div>
                             <div class="attachment-actions">
-                                <a href="{{ url_for('download_anexo', anexo_id=anexo.id) }}" class="attachment-download" title="Baixar arquivo">
+                                <a href="{{ url_for('anexos.download_anexo', anexo_id=anexo.id) }}" class="attachment-download" title="Baixar arquivo">
                                     <span class="download-icon">⬇️</span>
                                 </a>
-                                <form action="{{ url_for('excluir_anexo', anexo_id=anexo.id) }}" method="POST" class="attachment-delete-form">
+                                <form action="{{ url_for('anexos.excluir_anexo', anexo_id=anexo.id) }}" method="POST" class="attachment-delete-form">
                                     <button type="submit" class="attachment-delete" title="Excluir arquivo" onclick="return confirm('Tem certeza que deseja excluir este anexo?')">
                                         <span class="delete-icon">🗑️</span>
                                     </button>
@@ -148,7 +148,7 @@
                 <p class="no-attachments">Esta tarefa ainda não possui anexos.</p>
             {% endif %}
             
-            <form action="{{ url_for('adicionar_anexo', tarefa_id=tarefa.id) }}" method="POST" enctype="multipart/form-data" class="attachment-form">
+            <form action="{{ url_for('anexos.adicionar_anexo', tarefa_id=tarefa.id) }}" method="POST" enctype="multipart/form-data" class="attachment-form">
                 <div class="attachment-upload">
                     <label for="arquivo" class="upload-label">
                         <span class="upload-icon">📤</span>

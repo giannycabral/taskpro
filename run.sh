@@ -2,6 +2,6 @@
 
 echo "Iniciando a aplicação TaskPro..."
 cd /workspaces/taskpro
-export FLASK_APP=app.py
+export FLASK_APP=run.py
 export FLASK_ENV=development
-python app.py
+python run.py

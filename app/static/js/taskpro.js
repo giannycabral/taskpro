@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Função para alternar o status da tarefa (concluída/pendente)
 function toggleTaskStatus(taskId, element) {
-    fetch(`/marcar_concluida/${taskId}`, {
+    fetch(`/tarefas/marcar_concluida/${taskId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ function toggleTaskStatus(taskId, element) {
 // Função para excluir uma tarefa
 function deleteTask(taskId, element) {
     if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
-        fetch(`/excluir/${taskId}`, {
+        fetch(`/tarefas/excluir/${taskId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -1,5 +1,7 @@
 """
 Modelo de Usuário
+
+Este módulo define o modelo de usuário para a aplicação TaskPro.
 """
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -8,6 +10,13 @@ from app import db
 class Usuario(db.Model):
     """
     Modelo representando um usuário do sistema.
+    
+    Attributes:
+        id (int): Identificador único do usuário
+        nome (str): Nome do usuário
+        email (str): Email do usuário (único)
+        senha_hash (str): Hash da senha do usuário
+        data_registro (datetime): Data e hora do registro do usuário
     """
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(80), nullable=False)
@@ -15,13 +24,33 @@ class Usuario(db.Model):
     senha_hash = db.Column(db.String(200), nullable=False)
     data_registro = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Relacionamentos
-    tarefas = db.relationship('Tarefa', backref='proprietario', lazy=True, cascade="all, delete-orphan")
-    categorias = db.relationship('Categoria', backref='usuario', lazy=True, cascade="all, delete-orphan")
-    notificacoes = db.relationship('Notificacao', backref='usuario_ref', lazy=True, cascade="all, delete-orphan")
-    anexos = db.relationship('Anexo', backref='usuario', lazy=True)
+    # Relacionamentos principais
+    tarefas = db.relationship(
+        'Tarefa', 
+        backref='proprietario', 
+        lazy=True, 
+        cascade="all, delete-orphan"
+    )
+    categorias = db.relationship(
+        'Categoria', 
+        backref='usuario', 
+        lazy=True, 
+        cascade="all, delete-orphan"
+    )
+    notificacoes = db.relationship(
+        'Notificacao', 
+        backref='usuario_ref', 
+        lazy=True, 
+        cascade="all, delete-orphan"
+    )
+    anexos = db.relationship(
+        'Anexo', 
+        backref='usuario', 
+        lazy=True
+    )
     
     # Relacionamentos para tarefas compartilhadas
+    # Uso de strings para evitar dependências circulares
     tarefas_compartilhadas_por_mim = db.relationship(
         'TarefaCompartilhada',
         foreign_keys='TarefaCompartilhada.proprietario_id',
