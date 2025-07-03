@@ -19,9 +19,17 @@ class ProductionConfig(Config):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///tarefas.db')
 
+class TestConfig(Config):
+    """Configurações de teste"""
+    TESTING = True
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'  # Usar banco de dados em memória para testes
+    WTF_CSRF_ENABLED = False  # Desabilitar proteção CSRF para facilitar os testes
+
 # Configuração para mapeamento de ambiente
 config = {
     'development': DevelopmentConfig,
     'production': ProductionConfig,
+    'testing': TestConfig,
     'default': DevelopmentConfig
 }
