@@ -103,23 +103,31 @@ git clone https://github.com/seu-usuario/taskpro
 cd taskpro
 ```
 
-2. **Configure o ambiente**
+2. **Instale as dependências**
 ```bash
-# Instalar dependências
 pip install -r requirements.txt
+```
 
-# Criar banco de dados com usuário de teste
+3. **Crie o banco de dados**
+```bash
 python criar_bd.py
 ```
 
-3. **Execute a aplicação**
+4. **Execute a aplicação**
 ```bash
 python app.py
 ```
+Ou você pode usar o script de execução:
+```bash
+chmod +x run.sh
+./run.sh
+```
 
-4. **Acesse no navegador**: http://localhost:5001
+5. **Acesse a aplicação**
+Abra o navegador e acesse: `http://localhost:5003` ou `http://127.0.0.1:5003`
 
-### Usuário de Teste
+### Credenciais de Teste
+Para fazer login com o usuário de teste criado automaticamente:
 - **Email**: teste@exemplo.com
 - **Senha**: 123456
 
@@ -174,7 +182,41 @@ Contribuições são bem-vindas! Se você deseja melhorar este projeto, siga est
 
 Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para detalhes.
 
-## 🔮 Próximos Passos
+## � Cronograma de Refatoração
+
+Para melhorar a organização e escalabilidade do projeto, planejamos uma refatoração da estrutura seguindo este cronograma:
+
+1. **Dia 1**: Configuração da estrutura de diretórios e criação de arquivos base
+   - Criar nova estrutura de pastas
+   - Configurar arquivos de inicialização
+   - Preparar módulos base
+
+2. **Dia 2-3**: Refatoração dos modelos
+   - Separar cada modelo em seu próprio arquivo
+   - Reorganizar relacionamentos entre modelos
+   - Configurar importações corretas
+
+3. **Dia 4-6**: Refatoração das rotas e implementação dos blueprints
+   - Separar rotas por funcionalidade
+   - Implementar sistema de blueprints
+   - Ajustar redirecionamentos entre rotas
+
+4. **Dia 7**: Ajuste de referências e imports entre arquivos
+   - Corrigir dependências circulares
+   - Otimizar imports
+   - Verificar consistência de nomenclatura
+
+5. **Dia 8-9**: Testes e correção de bugs
+   - Testar cada componente individualmente
+   - Testar fluxos completos da aplicação
+   - Corrigir problemas identificados
+
+6. **Dia 10**: Validação final e limpeza de código
+   - Verificar funcionamento completo da aplicação
+   - Remover código obsoleto
+   - Documentar a nova estrutura
+
+## �🔮 Próximos Passos
 
 Funcionalidades planejadas para futuras versões:
 - 🌓 Temas claro/escuro personalizáveis
