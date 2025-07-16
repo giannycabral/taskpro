@@ -23,8 +23,8 @@
             
             <div class="user-info">
                 <span>Olá, {{ session.get('usuario_nome') }}!</span>
-                <a href="{{ url_for('tarefas_compartilhadas') }}" class="btn-back">Voltar às Tarefas Compartilhadas</a>
-                <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+                <a href="{{ url_for('compartilhamento.tarefas_compartilhadas') }}" class="btn-back">Voltar às Tarefas Compartilhadas</a>
+                <a href="{{ url_for('auth.logout') }}" class="btn-logout">Sair</a>
             </div>
         </div>
         
@@ -43,7 +43,7 @@
             <p>Esta tarefa foi compartilhada com você por <strong>{{ compartilhamento.proprietario.nome }}</strong> em {{ compartilhamento.data_compartilhamento.strftime('%d/%m/%Y') }}.</p>
         </div>
         
-        <form action="{{ url_for('editar_tarefa_compartilhada', compartilhamento_id=compartilhamento.id) }}" method="POST" class="edit-shared-form">
+        <form action="{{ url_for('compartilhamento.editar_tarefa_compartilhada', compartilhamento_id=compartilhamento.id) }}" method="POST" class="edit-shared-form">
             <div class="form-group">
                 <label for="tarefa">Conteúdo da Tarefa</label>
                 <textarea id="tarefa" name="tarefa" required>{{ tarefa.conteudo }}</textarea>

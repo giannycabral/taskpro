@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_main_icons.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_share.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_form_notes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_delete.css') }}">
 </head>
 
 <body>
@@ -154,7 +155,12 @@
                                         <a href="{{ url_for('compartilhamento.compartilhar_tarefa', tarefa_id=tarefa.id) }}" class="btn-share" title="Compartilhar Tarefa">
                                             <span class="share-icon">👥</span>
                                         </a>
-                                        <span class="close">×</span>
+                                        <a href="#" class="btn-delete" title="Excluir Tarefa">
+                                            <span class="delete-icon">🗑️</span>
+                                        </a>
+                                        <a href="#" class="btn-toggle" title="Marcar como {% if tarefa.concluida %}pendente{% else %}concluída{% endif %}">
+                                            <span class="toggle-icon">{% if tarefa.concluida %}↩️{% else %}✓{% endif %}</span>
+                                        </a>
                                     </div>
                                 </li>
                             {% endfor %}
@@ -195,7 +201,12 @@
                                     <a href="{{ url_for('compartilhamento.compartilhar_tarefa', tarefa_id=tarefa.id) }}" class="btn-share" title="Compartilhar Tarefa">
                                         <span class="share-icon">👥</span>
                                     </a>
-                                    <span class="close">×</span>
+                                    <a href="#" class="btn-delete" title="Excluir Tarefa">
+                                        <span class="delete-icon">🗑️</span>
+                                    </a>
+                                    <a href="#" class="btn-toggle" title="Marcar como {% if tarefa.concluida %}pendente{% else %}concluída{% endif %}">
+                                        <span class="toggle-icon">{% if tarefa.concluida %}↩️{% else %}✓{% endif %}</span>
+                                    </a>
                                 </div>
                             </li>
                         {% endfor %}
@@ -208,6 +219,12 @@
     <script src="{{ url_for('static', filename='js/taskpro.js') }}"></script>
     
     <script>
+        // Definir URLs de rotas para uso no JavaScript
+        const ROTAS = {
+            excluir_tarefa: "{{ url_for('tarefas.excluir_tarefa', tarefa_id=0) }}".replace('/0', ''),
+            marcar_concluida: "{{ url_for('tarefas.marcar_concluida', tarefa_id=0) }}".replace('/0', '')
+        };
+        
         // Script para contador de caracteres na caixa de notas
         document.addEventListener('DOMContentLoaded', function() {
             const notesTextarea = document.getElementById('taskNotes');
@@ -235,6 +252,35 @@
                 notesTextarea.addEventListener('input', updateNotesCharCount);
                 notesTextarea.addEventListener('keyup', updateNotesCharCount);
             }
+        });
+        
+        // Adaptar as funções do arquivo principal
+        document.addEventListener('DOMContentLoaded', function() {
+            // Registrar os novos botões de exclusão
+            document.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const tarefaId = this.closest('li').dataset.id;
+                    if (tarefaId) {
+                        // Usar função existente em taskpro.js
+                        deleteTask(tarefaId, this.closest('li'));
+                    }
+                });
+            });
+            
+            // Registrar os novos botões de toggle
+            document.querySelectorAll('.btn-toggle').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const tarefaId = this.closest('li').dataset.id;
+                    if (tarefaId) {
+                        // Usar função existente em taskpro.js
+                        toggleTaskStatus(tarefaId, this.closest('li'));
+                    }
+                });
+            });
         });
     </script>
 </body>

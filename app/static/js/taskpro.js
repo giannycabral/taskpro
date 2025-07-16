@@ -37,19 +37,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Função para alternar o status da tarefa (concluída/pendente)
 function toggleTaskStatus(taskId, element) {
-    fetch(`/tarefas/marcar_concluida/${taskId}`, {
+    // Usar a URL definida no template HTML
+    const url = typeof ROTAS !== 'undefined' ? 
+        `${ROTAS.marcar_concluida}/${taskId}` : 
+        `/tarefas/marcar_concluida/${taskId}`;
+        
+    console.log("Tentando alternar status da tarefa:", url);
+    fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
         }
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            // Alternar classe checked
             if (data.concluida) {
                 element.classList.add('checked');
             } else {
                 element.classList.remove('checked');
+            }
+            
+            // Atualizar ícone do botão de toggle
+            const toggleBtn = element.querySelector('.btn-toggle .toggle-icon');
+            if (toggleBtn) {
+                toggleBtn.textContent = data.concluida ? '↩️' : '✓';
+            }
+            
+            // Atualizar título do botão
+            const toggleLink = element.querySelector('.btn-toggle');
+            if (toggleLink) {
+                toggleLink.title = data.concluida ? 'Marcar como pendente' : 'Marcar como concluída';
+            }
+            
+            // Mostrar mensagem de sucesso
+            const flashContainer = document.querySelector('.flash-messages');
+            if (flashContainer) {
+                const flashMessage = document.createElement('div');
+                flashMessage.className = 'flash sucesso';
+                flashMessage.textContent = data.concluida ? 'Tarefa concluída!' : 'Tarefa reaberta como pendente!';
+                flashContainer.appendChild(flashMessage);
+                
+                // Remover mensagem após alguns segundos
+                setTimeout(() => {
+                    flashMessage.style.opacity = '0';
+                    setTimeout(() => flashMessage.remove(), 500);
+                }, 3000);
             }
         }
     })
@@ -60,38 +95,63 @@ function toggleTaskStatus(taskId, element) {
 
 // Função para excluir uma tarefa
 function deleteTask(taskId, element) {
-    if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
-        fetch(`/tarefas/excluir/${taskId}`, {
+    if (confirm('Tem certeza que deseja excluir esta tarefa? Esta ação não pode ser desfeita.')) {
+        // Usar a URL definida no template HTML
+        const url = typeof ROTAS !== 'undefined' ? 
+            `${ROTAS.excluir_tarefa}/${taskId}` : 
+            `/tarefas/excluir/${taskId}`;
+        
+        console.log("Tentando excluir tarefa:", url);
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
             }
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Animação suave de saída antes de remover
-                element.style.opacity = '0';
-                element.style.transform = 'translateY(-10px)';
-                element.style.transition = 'all 0.3s ease';
+                // Adicionar classe para animar a remoção
+                element.classList.add('removing');
                 
                 setTimeout(() => {
                     element.remove();
                     
                     // Verifica se a categoria ficou vazia
                     const categorySection = element.closest('.category-section');
-                    const remainingTasks = categorySection.querySelectorAll('li[data-id]');
+                    if (categorySection) {
+                        const remainingTasks = categorySection.querySelectorAll('li[data-id]');
+                        
+                        if (remainingTasks.length === 0) {
+                            const emptyMessage = document.createElement('li');
+                            emptyMessage.textContent = 'Nenhuma tarefa nesta categoria';
+                            categorySection.querySelector('ul').appendChild(emptyMessage);
+                        }
+                    }
                     
-                    if (remainingTasks.length === 0) {
-                        const emptyMessage = document.createElement('li');
-                        emptyMessage.textContent = 'Nenhuma tarefa nesta categoria';
-                        categorySection.querySelector('ul').appendChild(emptyMessage);
+                    // Mostrar mensagem de sucesso
+                    const flashContainer = document.querySelector('.flash-messages');
+                    if (flashContainer) {
+                        const flashMessage = document.createElement('div');
+                        flashMessage.className = 'flash sucesso';
+                        flashMessage.textContent = 'Tarefa excluída com sucesso!';
+                        flashContainer.appendChild(flashMessage);
+                        
+                        // Remover mensagem após alguns segundos
+                        setTimeout(() => {
+                            flashMessage.style.opacity = '0';
+                            setTimeout(() => flashMessage.remove(), 500);
+                        }, 3000);
                     }
                 }, 300);
+            } else {
+                alert('Ocorreu um erro ao excluir a tarefa. Por favor, tente novamente.');
             }
         })
         .catch(error => {
             console.error('Erro ao excluir tarefa:', error);
+            alert('Ocorreu um erro ao excluir a tarefa. Por favor, tente novamente.');
         });
     }
 }

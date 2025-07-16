@@ -23,8 +23,8 @@
             
             <div class="user-info">
                 <span>Olá, {{ session.get('usuario_nome') }}!</span>
-                <a href="{{ url_for('index') }}" class="btn-back">Voltar ao Início</a>
-                <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+                <a href="{{ url_for('tarefas.index') }}" class="btn-back">Voltar ao Início</a>
+                <a href="{{ url_for('auth.logout') }}" class="btn-logout">Sair</a>
             </div>
         </div>
         
@@ -66,7 +66,7 @@
                             </div>
                             <div class="shared-task-actions">
                                 {% if item.permissao_edicao %}
-                                    <a href="{{ url_for('editar_tarefa_compartilhada', compartilhamento_id=item.compartilhamento_id) }}" class="edit-shared-btn">Editar Tarefa</a>
+                                    <a href="{{ url_for('compartilhamento.editar_tarefa_compartilhada', compartilhamento_id=item.compartilhamento_id) }}" class="edit-shared-btn">Editar Tarefa</a>
                                 {% else %}
                                     <span class="view-only-badge">Somente visualização</span>
                                 {% endif %}

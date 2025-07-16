@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_share.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_attachments.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_notes_improved.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/taskpro_delete.css') }}">
 </head>
 
 <body>
@@ -86,6 +87,13 @@
                     <button type="submit" class="action-btn toggle-btn">
                         <span class="btn-icon">{% if tarefa.concluida %}↩️{% else %}✓{% endif %}</span>
                         <span class="btn-text">{% if tarefa.concluida %}Reabrir{% else %}Concluir{% endif %}</span>
+                    </button>
+                </form>
+                
+                <form action="{{ url_for('tarefas.excluir_tarefa', tarefa_id=tarefa.id) }}" method="post" class="delete-form" id="deleteTaskForm">
+                    <button type="submit" class="action-btn delete-btn">
+                        <span class="btn-icon">🗑️</span>
+                        <span class="btn-text">Excluir</span>
                     </button>
                 </form>
             </div>
@@ -257,6 +265,59 @@
                     })
                     .catch(error => {
                         console.error('Erro:', error);
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                        alert('Ocorreu um erro de conexão. Por favor, tente novamente.');
+                    });
+                });
+            }
+            
+            // Lidar com o formulário de exclusão de tarefa
+            const deleteForm = document.getElementById('deleteTaskForm');
+            if (deleteForm) {
+                deleteForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Confirmar a exclusão
+                    if (!confirm('Tem certeza que deseja excluir esta tarefa? Esta ação não pode ser desfeita.')) {
+                        return false;
+                    }
+                    
+                    const button = this.querySelector('.delete-btn');
+                    const originalText = button.innerHTML;
+                    
+                    // Mostrar feedback visual
+                    button.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Excluindo...</span>';
+                    button.disabled = true;
+                    
+                    // Adicionar classe para iniciar animação de exclusão
+                    document.querySelector('.task-details-card').classList.add('deleting');
+                    
+                    // Enviar formulário via fetch API
+                    fetch(this.action, {
+                        method: 'POST',
+                        body: new FormData(this),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // Após animação, redirecionar para a página inicial
+                            setTimeout(() => {
+                                window.location.href = "{{ url_for('tarefas.index') }}";
+                            }, 500);
+                        } else {
+                            // Caso haja erro, restaurar botão e remover classe de animação
+                            document.querySelector('.task-details-card').classList.remove('deleting');
+                            button.innerHTML = originalText;
+                            button.disabled = false;
+                            alert('Ocorreu um erro ao excluir a tarefa. Por favor, tente novamente.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        document.querySelector('.task-details-card').classList.remove('deleting');
                         button.innerHTML = originalText;
                         button.disabled = false;
                         alert('Ocorreu um erro de conexão. Por favor, tente novamente.');

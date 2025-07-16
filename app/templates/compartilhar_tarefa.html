@@ -24,8 +24,8 @@
             
             <div class="user-info">
                 <span>Olá, {{ session.get('usuario_nome') }}!</span>
-                <a href="{{ url_for('index') }}" class="btn-back">Voltar ao Início</a>
-                <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+                <a href="{{ url_for('tarefas.index') }}" class="btn-back">Voltar ao Início</a>
+                <a href="{{ url_for('auth.logout') }}" class="btn-logout">Sair</a>
             </div>
         </div>
         
@@ -56,7 +56,7 @@
         </div>
 
         <div class="section-title">Adicionar Compartilhamento</div>
-        <form action="{{ url_for('compartilhar_tarefa', tarefa_id=tarefa.id) }}" method="POST" class="share-form">
+        <form action="{{ url_for('compartilhamento.compartilhar_tarefa', tarefa_id=tarefa.id) }}" method="POST" class="share-form">
             <div class="form-group">
                 <label for="email">Email do Destinatário</label>
                 <input type="email" id="email" name="email" placeholder="Email do usuário" required>
@@ -88,7 +88,7 @@
                             <div class="shared-user-date">Compartilhado em {{ compartilhamento.data }}</div>
                         </div>
                         <div class="shared-user-actions">
-                            <form action="{{ url_for('remover_compartilhamento', compartilhamento_id=compartilhamento.id) }}" method="POST">
+                            <form action="{{ url_for('compartilhamento.remover_compartilhamento', compartilhamento_id=compartilhamento.id) }}" method="POST">
                                 <button type="submit" class="remove-share-btn" onclick="return confirm('Tem certeza que deseja remover o compartilhamento com {{ compartilhamento.nome_usuario }}?')">Remover</button>
                             </form>
                         </div>

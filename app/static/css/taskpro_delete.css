@@ -1,0 +1,104 @@
+/* TaskPro - Estilos para funcionalidade de exclusão de tarefas */
+
+/* Estilização para o botão de exclusão */
+.btn-delete {
+    color: #e74c3c;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    margin-left: 5px;
+    text-decoration: none;
+}
+
+/* Estilização para o botão de alternar status */
+.btn-toggle {
+    color: #2ecc71;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    margin-left: 5px;
+    text-decoration: none;
+}
+
+.btn-toggle:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.toggle-icon {
+    font-size: 1.2rem;
+}
+
+/* Quando a tarefa estiver concluída, alterar cor do botão toggle */
+li.checked .btn-toggle {
+    color: #3498db;
+}
+
+.btn-delete:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.delete-icon {
+    font-size: 1.2rem;
+}
+
+/* Estilos para o botão de exclusão em tela de detalhes */
+.delete-btn {
+    background-color: #e74c3c !important;
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b !important;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Animação para remoção de tarefas */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+}
+
+li.removing {
+    animation: fadeOut 0.3s forwards;
+    pointer-events: none;
+}
+
+/* Estilização do formulário de confirmação em tela de detalhes */
+.delete-form {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+/* Estilização para feedback visual após exclusão */
+.task-deleted-feedback {
+    background-color: rgba(231, 76, 60, 0.1);
+    border-left: 3px solid #e74c3c;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    color: #e74c3c;
+    font-weight: 500;
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
