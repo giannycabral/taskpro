@@ -2,6 +2,8 @@
 
 Um aplicativo web profissional e moderno para gerenciar suas tarefas diárias com eficiência.
 
+[![Demo TaskPro](https://img.shields.io/badge/Demo-GitHub%20Pages-brightgreen)](https://giannycabral.github.io/taskpro/)
+
 ## 📋 Visão Geral
 
 TaskPro é uma aplicação web para gerenciamento de tarefas desenvolvida com Python/Flask no backend e HTML/CSS/JavaScript no frontend. A aplicação permite que usuários criem uma conta pessoal, adicionem tarefas, organizem por categorias, definam prazos e acompanhem seu progresso de forma eficiente.
@@ -118,6 +120,14 @@ taskpro/
     ├── __init__.py        # Inicialização de scripts
     └── criar_bd.py        # Script refatorado para criação do banco de dados
 ```
+
+## 🌐 Versão Online
+
+Uma versão demonstrativa do TaskPro está disponível através do GitHub Pages:
+
+**[Acessar Demo do TaskPro](https://giannycabral.github.io/taskpro/)**
+
+Note que esta é uma versão estática para demonstração visual. Para ter acesso a todas as funcionalidades, siga as instruções de instalação abaixo.
 
 ## 🚀 Como Usar
 

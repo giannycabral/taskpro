@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskPro - Sua Lista de Tarefas Eficiente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <meta name="description" content="TaskPro - Um aplicativo web profissional e moderno para gerenciar suas tarefas diárias com eficiência.">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1>📝 TaskPro</h1>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="active">Início</a>
+                <a href="#features">Funcionalidades</a>
+                <a href="#how-to-use">Como Usar</a>
+                <a href="https://github.com/giannycabral/taskpro" class="github-link">Ver no GitHub</a>
+                <a href="#" class="btn login-btn">Login Demo</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>TaskPro</h1>
+                <p class="subtitle">Sua Lista de Tarefas Eficiente</p>
+                <p class="description">
+                    Um aplicativo web profissional e moderno para gerenciar suas tarefas diárias com eficiência.
+                </p>
+                <div class="cta-buttons">
+                    <a href="#demo" class="btn primary-btn">Ver Demo</a>
+                    <a href="https://github.com/giannycabral/taskpro" class="btn secondary-btn">Código Fonte</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="images/taskpro-demo.png" alt="TaskPro Demo Screenshot" class="screenshot">
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <h2>✨ Funcionalidades</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">👤</div>
+                    <h3>Sistema de Usuários</h3>
+                    <ul>
+                        <li>Registro e login de usuários</li>
+                        <li>Proteção de rotas por autenticação</li>
+                        <li>Senhas criptografadas</li>
+                        <li>Compartilhamento de tarefas</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">✅</div>
+                    <h3>Gerenciamento de Tarefas</h3>
+                    <ul>
+                        <li>Adicionar, editar e excluir tarefas</li>
+                        <li>Organizar por categorias personalizadas</li>
+                        <li>Definir datas de vencimento</li>
+                        <li>Anexar arquivos às tarefas</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Interface Moderna</h3>
+                    <ul>
+                        <li>Design profissional e responsivo</li>
+                        <li>Filtros e busca de tarefas</li>
+                        <li>Ordenação por diversos critérios</li>
+                        <li>Interações intuitivas</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="demo" class="demo">
+            <h2>🎬 Demo</h2>
+            <div class="demo-container">
+                <div class="demo-app">
+                    <div class="app-header">
+                        <h3>Minhas Tarefas</h3>
+                        <div class="app-actions">
+                            <select>
+                                <option>Todas as categorias</option>
+                                <option>Trabalho</option>
+                                <option>Pessoal</option>
+                                <option>Estudos</option>
+                            </select>
+                            <button class="btn small-btn">+</button>
+                        </div>
+                    </div>
+                    <div class="tasks-container">
+                        <div class="task-item completed">
+                            <input type="checkbox" checked>
+                            <span>Finalizar relatório de vendas</span>
+                            <span class="tag work">Trabalho</span>
+                            <span class="due-date">Ontem</span>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox">
+                            <span>Comprar ingredientes para jantar</span>
+                            <span class="tag personal">Pessoal</span>
+                            <span class="due-date">Hoje</span>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox">
+                            <span>Estudar para a prova de Flask</span>
+                            <span class="tag study">Estudos</span>
+                            <span class="due-date">Em 3 dias</span>
+                        </div>
+                        <div class="task-item overdue">
+                            <input type="checkbox">
+                            <span>Enviar e-mail para equipe</span>
+                            <span class="tag work">Trabalho</span>
+                            <span class="due-date overdue">Atrasado</span>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox">
+                            <span>Marcar consulta médica</span>
+                            <span class="tag personal">Pessoal</span>
+                            <span class="due-date">Em 2 semanas</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-description">
+                    <h3>Esta é uma demonstração visual</h3>
+                    <p>Para experimentar todas as funcionalidades do TaskPro:</p>
+                    <ol>
+                        <li>Clone o repositório do GitHub</li>
+                        <li>Siga as instruções de instalação</li>
+                        <li>Execute localmente em seu computador</li>
+                    </ol>
+                    <a href="https://github.com/giannycabral/taskpro" class="btn primary-btn">Ver no GitHub</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-to-use" class="how-to-use">
+            <h2>🚀 Como Usar</h2>
+            <div class="install-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Clone o repositório</h3>
+                    <pre><code>git clone https://github.com/giannycabral/taskpro
+cd taskpro</code></pre>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Instale as dependências</h3>
+                    <pre><code>pip install -r requirements.txt</code></pre>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Crie o banco de dados</h3>
+                    <pre><code>python scripts/criar_bd.py</code></pre>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Execute a aplicação</h3>
+                    <pre><code>python run.py</code></pre>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <h3>Acesse no navegador</h3>
+                    <pre><code>http://localhost:5005</code></pre>
+                </div>
+            </div>
+        </section>
+        
+        <section class="technologies">
+            <h2>🛠️ Tecnologias Utilizadas</h2>
+            <div class="tech-container">
+                <div class="tech-group">
+                    <h3>Backend</h3>
+                    <div class="tech-items">
+                        <div class="tech-item">Python 3.8+</div>
+                        <div class="tech-item">Flask</div>
+                        <div class="tech-item">SQLAlchemy</div>
+                        <div class="tech-item">SQLite</div>
+                        <div class="tech-item">Werkzeug</div>
+                    </div>
+                </div>
+                <div class="tech-group">
+                    <h3>Frontend</h3>
+                    <div class="tech-items">
+                        <div class="tech-item">HTML5</div>
+                        <div class="tech-item">CSS3</div>
+                        <div class="tech-item">JavaScript</div>
+                        <div class="tech-item">Google Fonts</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <h2>📝 TaskPro</h2>
+                <p>Gerenciamento de tarefas eficiente</p>
+            </div>
+            <div class="footer-links">
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="https://github.com/giannycabral/taskpro">GitHub</a></li>
+                    <li><a href="#features">Funcionalidades</a></li>
+                    <li><a href="#how-to-use">Como Usar</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h3>Contato</h3>
+                <p>Desenvolvido por <a href="https://github.com/giannycabral">REGIANE CABRAL</a></p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 TaskPro. Licenciado sob MIT.</p>
+        </div>
+    </footer>
+
+    <script src="js/demo.js"></script>
+</body>
+</html>
