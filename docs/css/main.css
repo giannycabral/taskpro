@@ -183,11 +183,18 @@ section {
   align-items: center;
 }
 
-.screenshot {
+.screenshot, .hero-image img {
   max-width: 100%;
   height: auto;
   border-radius: 10px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  display: block;
+  margin: 0 auto;
+  transition: transform 0.3s ease;
+}
+
+.screenshot:hover, .hero-image img:hover {
+  transform: scale(1.02);
 }
 
 /* Features section */
